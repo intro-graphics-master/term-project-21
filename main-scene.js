@@ -2,7 +2,7 @@ import {tiny, defs} from './assignment-4-resources.js';
                                                                 // Pull these names into this module's scope for convenience:
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base } = defs;
+const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder } = defs;
 
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
@@ -22,7 +22,12 @@ class Solar_System extends Scene
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
                    'ball_4' : new Subdivision_Sphere( 4 ),
-                     'star' : new Planar_Star() };
+                     'star' : new Planar_Star(), 
+                 'sphere1'  : new Subdivision_Sphere(1),
+                 'cylinder' : new Rounded_Capped_Cylinder(50,50),
+                 'sphere6'  : new Subdivision_Sphere(6),
+                 'test' : new Windmill(3),
+                      };
 
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
@@ -61,7 +66,14 @@ class Solar_System extends Scene
                                     { texture: new Texture( "assets/earth.gif" ),
                                       ambient: 0, diffusivity: 1, specularity: 1, color: Color.of( .4,.4,.4,1 ) } ),
                       black_hole: new Material( black_hole_shader ),
-                             sun: new Material( sun_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } )
+                             sun: new Material( phong_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } ),
+  arms: new Material(phong_shader, { ambient: 0, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
+  cake1: new Material(phong_shader, { ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
+  cake2: new Material(phong_shader, { ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
+  eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) })
+
+
+
                        };
 
                                   // Some setup code that tracks whether the "lights are on" (the stars), and also
@@ -141,8 +153,8 @@ class Solar_System extends Scene
                                                   // increases, and bluer as it decreases.
       const smoothly_varying_ratio = .5 + .5 * Math.sin( 2 * Math.PI * t/10 ),
             sun_size = 1 + 2 * smoothly_varying_ratio,
-                 sun = undefined,
-           sun_color = undefined;
+                 sun = model_transform.times(Mat4.scale([sun_size, sun_size, sun_size])),
+            sun_color = Color.of( smoothly_varying_ratio, smoothly_varying_ratio, 1-smoothly_varying_ratio, 1);
 
       this.materials.sun.color = sun_color;     // Assign our current sun color to the existing sun material.          
 
@@ -152,62 +164,39 @@ class Solar_System extends Scene
                                                 // TODO (#3c):  Replace with a point light located at the origin, with the sun's color
                                                 // (created above).  For the third argument pass in the point light's size.  Use
                                                 // 10 to the power of sun_size.
-      program_state.lights = [ new Light( Vec.of( 0,0,0,1 ), Color.of( 1,1,1,1 ), 100000 ) ];
+      //const t = this.t = program_state.animation_time/1000;
+      //const angle = Math.sin( t );
+      const light_position = Mat4.rotation( 360, [ 0,0,10 ] ).times( Vec.of( 1,1,1,0 ) );
+      program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 100000000 ) ];
 
                             // TODO (#5c):  Throughout your program whenever you use a material (by passing it into draw),
                             // pass in a modified version instead.  Call .override( modifier ) on the material to
                             // generate a new one that uses the below modifier, replacing the ambient term with a 
-                            // new value based on our light switch.                         
-      const modifier = this.lights_on ? { ambient: 0.3 } : { ambient: 0.0 };
+                            // new value based on our light switch.
 
-                                                // TODO (#3d):   Draw the sun using its matrix (crated by you above) and material.
-     
-                                                // TODO (#4d1):  Draw planet 1 orbiting at 5 units radius, revolving AND rotating at 1 radian/sec.
-      
-                                                // TODO (#4d2):  Draw planet 2 orbiting 3 units farther, revolving AND rotating slower.
-      
-                                                // TODO (#6b1):  Draw moon 1 orbiting 2 units away from planet 2, revolving AND rotating.
-      
-                                                // TODO (#4d3):  Draw planet 3 orbiting 3 units farther, revolving AND rotating slower.
-      
-                                                // TODO (#6b2):  Draw moon 2 orbiting 2 units away from planet 3, revolving AND rotating.
-     
-                                                // TODO (#4d4):  Draw planet 4
-      
-                                                // TODO (#4d5):  Draw planet 5
-      
-                                                // TODO (#5a): If the light switch is on, loop through star_matrices and draw 2D stars.
-      
-                                                // TODO (#7b): Give the child scene (camera_teleporter) the *inverted* matrices
-                                                // for each of your objects, mimicking the examples above.  Tweak each
-                                                // matrix a bit so you can see the planet, or maybe appear to be standing
-                                                // on it.  Remember the moons.
-      // this.camera_teleporter.cameras.push( Mat4.inverse( 
+       const angle = Math.PI / 18;
+       let x = Math.sin(8*t);
+                             
+      const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
+      model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.scale([5, 5, 5]));
+          
+  // body
+     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
+     this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
+    
+    //arms                                            
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,1,0 ))).times(Mat4.translation([1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 ))).times(Mat4.translation([-1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
+                                                
 
+  //legs
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 ))).times(Mat4.translation([.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 ))).times(Mat4.translation([-.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms);      
+                                                
 
-
-
-      // ***** BEGIN TEST SCENE *****               
-                                          // TODO:  Delete (or comment out) the rest of display(), starting here:
-
-      program_state.set_camera( Mat4.translation([ 0,3,-10 ]) );
-      const angle = Math.sin( t );
-      const light_position = Mat4.rotation( angle, [ 1,0,0 ] ).times( Vec.of( 0,-1,1,0 ) );
-      program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 1000000 ) ];
-      model_transform = Mat4.identity();
-      this.shapes.box.draw( context, program_state, model_transform, this.materials.plastic.override( yellow ) );
-      model_transform.post_multiply( Mat4.translation([ 0, -2, 0 ]) );
-      this.shapes.ball_4.draw( context, program_state, model_transform, this.materials.metal_earth.override( blue ) );
-      model_transform.post_multiply( Mat4.rotation( t, Vec.of( 0,1,0 ) ) )
-      model_transform.post_multiply( Mat4.rotation( 1, Vec.of( 0,0,1 ) )
-                             .times( Mat4.scale      ([ 1,   2, 1 ]) )
-                             .times( Mat4.translation([ 0,-1.5, 0 ]) ) );
-      this.shapes.box.draw( context, program_state, model_transform, this.materials.plastic_stars.override( yellow ) );
-
-      // ***** END TEST SCENE *****
-
-      // Warning: Get rid of the test scene, or else the camera position and movement will not work.
-
+    //eyes
+     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([0.2,-0.7,0.8])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
+     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([-0.2,-0.7,0.8])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
 
 
     }
