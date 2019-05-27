@@ -92,9 +92,9 @@ class Solar_System extends Scene
                       black_hole: new Material( black_hole_shader ),
 
                              sun: new Material( phong_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } ),
-  arms: new Material(phong_shader, { ambient: 0, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
-  cake1: new Material(phong_shader, { ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
-  cake2: new Material(phong_shader, { ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
+  arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
+  cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
+  cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
   eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
 fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
@@ -240,21 +240,22 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                             // new value based on our light switch.                         
       //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
 
+//candlefire      
       model_transform = Mat4.identity();
 
 
 
-      let can1=model_transform.times(Mat4.rotation(90,Vec.of(1,0,0))).times( Mat4.translation([5,0,0]));
+      let can1=model_transform.times(Mat4.translation([-3.5, 6, -0.5])).times(Mat4.rotation(90,Vec.of(-1,0,0))).times( Mat4.translation([5,0,0]));
       this.shapes.cakelayer.draw(context,program_state,
                                         can1.times( Mat4.scale([0.1, 0.1, 3 ]) ),
                                        this.materials.plastic.override(canclecy)); 
-      let can1f = can1.times( Mat4.translation([0,0,-1.5]));
+      let can1f = can1.times( Mat4.translation([0,0,1.5]));
       this.shapes.ball_4.draw(context,program_state,
                                        can1f.times( Mat4.scale([0.2, 0.2, 0.2 ]) ),
                                       this.materials.fire.override(blue)); 
             
       this.shapes.candlefire.draw(context,program_state,
-                                   can1f.times(Mat4.rotation(135,Vec.of(1,0,0))).times( Mat4.translation([0,0,0.25])).times( Mat4.scale([0.2, 0.2, 0.2 ])),//.times( Mat4.scale([0.1, 0.1, 3 ]) ),
+                                   can1f.times(Mat4.rotation(270,Vec.of(1,0,0))).times( Mat4.translation([0,0,0.25])).times( Mat4.scale([0.2, 0.2, 0.2 ])),//.times( Mat4.scale([0.1, 0.1, 3 ]) ),
                                    this.materials.fire.override(modifier)); 
 
  //program_state.set_camera(Mat4.translation([0,0,10]));
