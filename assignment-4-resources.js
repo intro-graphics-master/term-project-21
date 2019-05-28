@@ -101,6 +101,11 @@ class Tetrahedron extends Shape
     }
 }
 
+
+
+
+
+
 const Windmill = defs.Windmill =
 class Windmill extends Shape
 {                             // **Windmill**  As our shapes get more complicated, we begin using matrices and flow
@@ -232,7 +237,6 @@ class Subdivision_Sphere extends Shape
       this.subdivide_triangle( ab, bc, ac, count - 1 );
     }
 }
-
 
 
 const Grid_Patch = defs.Grid_Patch =
