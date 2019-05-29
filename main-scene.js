@@ -162,6 +162,14 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                                              // program_state:  Information the shader needs for drawing.  Pass to draw().
                                              // context:  Wraps the WebGL rendering context shown onscreen.  Pass to draw().                                                       
 
+let model_transform = Mat4.identity();
+
+
+
+
+
+
+
 
       /**********************************
       Start coding down here!!!!
@@ -171,7 +179,7 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
                                     // Variable model_transform will be a local matrix value that helps us position shapes.
                                     // It starts over as the identity every single frame - coordinate axes at the origin.
-      let model_transform = Mat4.identity();
+      
                                                   // TODO (#3b):  Use the time-varying value of sun_size to create a scale matrix 
                                                   // for the sun. Also use it to create a color that turns redder as sun_size
                                                   // increases, and bluer as it decreases.
@@ -215,9 +223,20 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
+       
+
+
+  if (t < 100)
+  {
+    //this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([t,0,0])), this.materials.cake1);
+    model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.rotation(45, Vec.of(0,0,1))).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
+  }
+
+
+
                              
       const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
-      model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.scale([5, 5, 5]));
+      
           
   // body
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
@@ -241,15 +260,20 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
       //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
 
 //candlefire      
-      model_transform = Mat4.identity();
+      //model_transform = Mat4.identity();
 
 
-
-      let can1=model_transform.times(Mat4.translation([-3.5, 6, -0.5])).times(Mat4.rotation(90,Vec.of(-1,0,0))).times( Mat4.translation([5,0,0]));
+for (let i = 0; i < 9; i++)
+{
+      
+      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.4])).times(Mat4.translation([0, 0, 3])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
+      
+    if (t < 30)
+    {
       this.shapes.cakelayer.draw(context,program_state,
-                                        can1.times( Mat4.scale([0.1, 0.1, 3 ]) ),
-                                       this.materials.plastic.override(canclecy)); 
-      let can1f = can1.times( Mat4.translation([0,0,1.5]));
+                                        can1.times( Mat4.scale([0.1, 0.1, 3-t/10 ]) ),
+                                       this.materials.plastic.override(Color.of(i/10 + 0.2, i/10, i/10, 1))); 
+      let can1f = can1.times( Mat4.translation([0,0,1.5-t/20]));
       this.shapes.ball_4.draw(context,program_state,
                                        can1f.times( Mat4.scale([0.2, 0.2, 0.2 ]) ),
                                       this.materials.fire.override(blue)); 
@@ -257,6 +281,13 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
       this.shapes.candlefire.draw(context,program_state,
                                    can1f.times(Mat4.rotation(270,Vec.of(1,0,0))).times( Mat4.translation([0,0,0.25])).times( Mat4.scale([0.2, 0.2, 0.2 ])),//.times( Mat4.scale([0.1, 0.1, 3 ]) ),
                                    this.materials.fire.override(modifier)); 
+    }
+      
+
+}
+
+
+
 
  //program_state.set_camera(Mat4.translation([0,0,10]));
                   
@@ -458,12 +489,12 @@ class Sun_Shader extends Shader
 
 
         context.uniformMatrix4fv( gpu_addresses.projection_camera_model_transform, false, Mat.flatten_2D_to_1D( PCM.transposed() ) );
-        context.uniform4fv (gpu_addresses.sun_color, Color.of(1,0,0, 1));
+        context.uniform4fv (gpu_addresses.sun_color, Color.of(1,0.5,0, 1));
         context.uniform1f ( gpu_addresses.time, program_state.animation_time / 1000 );
-        context.uniform1f ( gpu_addresses.pulseHeight, 0.37 );
+        context.uniform1f ( gpu_addresses.pulseHeight, 0 );
         context.uniform1f ( gpu_addresses.displacementHeight, 0.65 );
-        context.uniform1f ( gpu_addresses.turbulenceDetail, 0.50 );
-        context.uniform1f ( gpu_addresses.fireSpeed, 0.35 );
+        context.uniform1f ( gpu_addresses.turbulenceDetail, 0.63 );
+        context.uniform1f ( gpu_addresses.fireSpeed, 0.5 );
 
     }
                                 // TODO (#EC 2):  Complete the shaders, displacing the input sphere's vertices as
