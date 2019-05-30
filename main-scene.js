@@ -3,7 +3,7 @@ import {tiny, defs} from './assignment-4-resources.js';
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus } = defs;
+const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus , Surface_Of_Revolution} = defs;
 
 
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
@@ -20,6 +20,7 @@ class Solar_System extends Scene
                                                         // At the beginning of our program, load one of each of these shape 
                                                         // definitions onto the GPU.  NOTE:  Only do this ONCE per shape.
                                                         // Don't define blueprints for shapes in display() every frame.
+       const points = Vec.cast( [0,0,0], [0.2,0,0.2], [0.3,0,0.3], [0.4,0,0.4], [0.5, 0, 0.5], [0.5, 0, 4], [0,0,4]);//, [1.5,0,2], [2,0,2.3], [2, 0, 3.3], [0,0,3.3] );
 
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
@@ -32,8 +33,19 @@ class Solar_System extends Scene
                  'test' : new Windmill(3),
                      'cakelayer': new Rounded_Capped_Cylinder(50,50),
                      'candlefire': new Rounded_Closed_Cone(10,10),
-                     'donut' : new Torus(100, 100)
+                     'donut' : new Torus(100, 100),
+                      'bullet': new defs.Surface_Of_Revolution( 180, 180, points )
                       };
+
+
+
+
+      //this.shapes = { bullet: new defs.Surface_Of_Revolution( 9, 9, points ) };
+
+      //const phong    = new defs.Phong_Shader( 1 );
+      //this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of( .7,.8,.6,1 ) } );
+    
+      //this.shapes.bullet.draw( context, program_state, model_transform.times( Mat4.translation([-10,0,0]) ), this.solid );
 
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
@@ -93,7 +105,7 @@ class Solar_System extends Scene
                       black_hole: new Material( black_hole_shader ),
 
                              sun: new Material( phong_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } ),
-                      arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
+                      arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5,smoothness: 800 , specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
                       cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
@@ -204,7 +216,16 @@ class Solar_System extends Scene
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
        
-    
+       
+
+
+
+       
+      this.shapes.bullet.draw( context, program_state, model_transform.times( Mat4.translation([-10,0,0]) ), this.materials.arms.override(Color.of(1,1,1,1)) );
+
+
+
+
 
   if (t < 100)
   {
@@ -216,7 +237,7 @@ class Solar_System extends Scene
                              
      const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
          
-     this.shapes.donut.draw(context, program_state, model_transform, this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
+     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
      this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
   // body
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
