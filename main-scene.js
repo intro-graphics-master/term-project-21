@@ -1,4 +1,5 @@
 import {tiny, defs} from './assignment-4-resources.js';
+//import {OrbitControls}  from'./thr/OrbitControls.js';
                                                                 // Pull these names into this module's scope for convenience:
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
