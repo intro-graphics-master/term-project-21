@@ -3,7 +3,7 @@ import {tiny, defs} from './assignment-4-resources.js';
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder } = defs;
+const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus } = defs;
 
 
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
@@ -31,7 +31,8 @@ class Solar_System extends Scene
                  'sphere6'  : new Subdivision_Sphere(6),
                  'test' : new Windmill(3),
                      'cakelayer': new Rounded_Capped_Cylinder(50,50),
-                     'candlefire': new Rounded_Closed_Cone(10,10)
+                     'candlefire': new Rounded_Closed_Cone(10,10),
+                     'donut' : new Torus(100, 100)
                       };
 
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
@@ -92,11 +93,11 @@ class Solar_System extends Scene
                       black_hole: new Material( black_hole_shader ),
 
                              sun: new Material( phong_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } ),
-  arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
-  cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
-  cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
-  eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
-fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
+                      arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
+                      cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
+                      cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
+                      eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
+                      fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
                        };
 
@@ -162,12 +163,7 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                                              // program_state:  Information the shader needs for drawing.  Pass to draw().
                                              // context:  Wraps the WebGL rendering context shown onscreen.  Pass to draw().                                                       
 
-let model_transform = Mat4.identity();
-
-
-
-
-
+      let model_transform = Mat4.identity();
 
 
 
@@ -185,16 +181,12 @@ let model_transform = Mat4.identity();
                                                   // increases, and bluer as it decreases.
       const smoothly_varying_ratio = .5 + .5 * Math.sin( 2 * Math.PI * t/10 ),
             sun_size = 1 + 2 * smoothly_varying_ratio,
-
-                 //sun = model_transform.times(Mat4.scale([sun_size, sun_size, sun_size])),
-            //sun_color = Color.of( smoothly_varying_ratio, smoothly_varying_ratio, 1-smoothly_varying_ratio, 1);
-
-                 sun = model_transform.times( Mat4.scale([sun_size,sun_size,sun_size]));//undefined,
-          // sun_color =  Color.of( 1,0,0,1 ) ;
+            sun = model_transform.times( Mat4.scale([sun_size,sun_size,sun_size]));//undefined,
+          
 
 
       this.materials.fire.color = Color.of( 1,0,0,1 ) ;  
-      //this.materials.sun.color = sun_color;     // Assign our current sun color to the existing sun material.          
+           // Assign our current sun color to the existing sun material.          
 
                                                 // *** Lights: *** Values of vector or point lights.  They'll be consulted by 
                                                 // the shader when coloring shapes.  See Light's class definition for inputs.
@@ -209,35 +201,23 @@ let model_transform = Mat4.identity();
       program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 100000000 ) ];
 
 
-      
-      //program_state.lights = [ new Light( Vec.of( 0,0,0,1 ), Color.of( 1,1,1,1 ), 100000 ) ];
-      //const a = this.a = program_state.animation_time/1000;
-      //const angle = Math.sin( t);
-      //const light_position = Mat4.rotation( angle, [ 1,0,0 ] ).times( Vec.of( 0,-1,1,0 ) );
-      //program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 1000000 ) ];
-                            // TODO (#5c):  Throughout your program whenever you use a material (by passing it into draw),
-                            // pass in a modified version instead.  Call .override( modifier ) on the material to
-                            // generate a new one that uses the below modifier, replacing the ambient term with a 
-
-                            // new value based on our light switch.
-
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
        
-
+    
 
   if (t < 100)
   {
-    //this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([t,0,0])), this.materials.cake1);
     model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.rotation(45, Vec.of(0,0,1))).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
   }
 
 
 
                              
-      const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
-      
-          
+     const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
+         
+     this.shapes.donut.draw(context, program_state, model_transform, this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
+     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
   // body
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
