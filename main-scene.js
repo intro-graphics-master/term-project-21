@@ -4,10 +4,9 @@ import {tiny, defs} from './assignment-4-resources.js';
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, 
-                           Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder,
-                            Cylindrical_Tube,Cone_Tip
-                            } = defs;
+
+const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus , Surface_Of_Revolution, Cylindrical_Tube,Cone_Tip} = defs;
+
 
 
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
@@ -36,13 +35,27 @@ class Solar_System extends Scene
                  'sphere1'  : new Subdivision_Sphere(1),
                  'cylinder' : new Capped_Cylinder(4,20),
                  'test' : new Windmill(3),
+ 
+                     'donut' : new Torus(100, 100),
+
                  //'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
                      'cakelayer': new Capped_Cylinder(4,20),
                      'candlefire': new Closed_Cone(4,10),
                      'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
+
                       };
+
+
+
+
+      //this.shapes = { bullet: new defs.Surface_Of_Revolution( 9, 9, points ) };
+
+      //const phong    = new defs.Phong_Shader( 1 );
+      //this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of( .7,.8,.6,1 ) } );
+    
+      //this.shapes.bullet.draw( context, program_state, model_transform.times( Mat4.translation([-10,0,0]) ), this.solid );
 
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
@@ -105,11 +118,11 @@ class Solar_System extends Scene
                       black_hole: new Material( black_hole_shader ),
 
                              sun: new Material( phong_shader, { ambient: 1, color: Color.of( 0,0,0,1 ) } ),
-  arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5, specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
-  cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
-  cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
-  eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
-fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
+                      arms: new Material(phong_shader, { ambient: 0.5, diffusivity: 0.5,smoothness: 800 , specularity: 0.5, color: Color.of( 1,1,1,1 ) }),
+                      cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
+                      cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
+                      eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
+                      fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
                        };
 
@@ -149,7 +162,9 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                     // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
-          program_state.set_camera( Mat4.look_at( Vec.of( 1,0,0 ), Vec.of( 0,1,0 ), Vec.of( 0,0,1 ) ) );
+
+          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0,0,20 ) ) );
+
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
         }
@@ -175,12 +190,7 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                                              // program_state:  Information the shader needs for drawing.  Pass to draw().
                                              // context:  Wraps the WebGL rendering context shown onscreen.  Pass to draw().                                                       
 
-let model_transform = Mat4.identity();
-
-
-
-
-
+      let model_transform = Mat4.identity();
 
 
 
@@ -198,16 +208,12 @@ let model_transform = Mat4.identity();
                                                   // increases, and bluer as it decreases.
       const smoothly_varying_ratio = .5 + .5 * Math.sin( 2 * Math.PI * t/10 ),
             sun_size = 1 + 2 * smoothly_varying_ratio,
-
-                 //sun = model_transform.times(Mat4.scale([sun_size, sun_size, sun_size])),
-            //sun_color = Color.of( smoothly_varying_ratio, smoothly_varying_ratio, 1-smoothly_varying_ratio, 1);
-
-                 sun = model_transform.times( Mat4.scale([sun_size,sun_size,sun_size]));//undefined,
-          // sun_color =  Color.of( 1,0,0,1 ) ;
+            sun = model_transform.times( Mat4.scale([sun_size,sun_size,sun_size]));//undefined,
+          
 
 
       this.materials.fire.color = Color.of( 1,0,0,1 ) ;  
-      //this.materials.sun.color = sun_color;     // Assign our current sun color to the existing sun material.          
+           // Assign our current sun color to the existing sun material.          
 
                                                 // *** Lights: *** Values of vector or point lights.  They'll be consulted by 
                                                 // the shader when coloring shapes.  See Light's class definition for inputs.
@@ -222,20 +228,19 @@ let model_transform = Mat4.identity();
       program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 100000000 ) ];
 
 
-      
-      //program_state.lights = [ new Light( Vec.of( 0,0,0,1 ), Color.of( 1,1,1,1 ), 100000 ) ];
-      //const a = this.a = program_state.animation_time/1000;
-      //const angle = Math.sin( t);
-      //const light_position = Mat4.rotation( angle, [ 1,0,0 ] ).times( Vec.of( 0,-1,1,0 ) );
-      //program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 1000000 ) ];
-                            // TODO (#5c):  Throughout your program whenever you use a material (by passing it into draw),
-                            // pass in a modified version instead.  Call .override( modifier ) on the material to
-                            // generate a new one that uses the below modifier, replacing the ambient term with a 
-
-                            // new value based on our light switch.
-
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
+
+       
+       
+
+
+
+       
+
+
+
+
         model_transform = Mat4.identity();
         this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
    // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
@@ -243,26 +248,30 @@ let model_transform = Mat4.identity();
   this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,40])), this.solid);
 
 
+
   if (t < 100)
   {
-    //this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([t,0,0])), this.materials.cake1);
-    model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.rotation(45, Vec.of(0,0,1))).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
+    model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
   }
 
    
 
                              
+       
+     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
+     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
+
       const modifier = this.lights_on ? { ambient: 0.7 } : { ambient: 0.0 };
-      
-          
+
   // body
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2.override(modifier));
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
-    //arms                                            
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,1,0 ))).times(Mat4.translation([1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 ))).times(Mat4.translation([-1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
-                                                
+    //arms
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,-0.3,0])).times(Mat4.scale([0.1, 0.3, 0.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,-0.3,0])).times(Mat4.scale([0.3, 0.1, 0.1])), this.materials.arms); 
+                                                 
+           //.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 )))                                     
 
   //legs
      this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 ))).times(Mat4.translation([.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms); 
