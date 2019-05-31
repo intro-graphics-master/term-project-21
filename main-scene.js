@@ -80,6 +80,8 @@ class Solar_System extends Scene
                                                               // Extra credit shaders:
       const black_hole_shader = new Black_Hole_Shader();
       const sun_shader        = new Sun_Shader();
+
+      const ocean = new New_Shader();
       
                                               // *** Materials: *** wrap a dictionary of "options" for a shader.
 
@@ -124,8 +126,11 @@ class Solar_System extends Scene
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
                       fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
-                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
-ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ), ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
+
+                      monalisa : new Material(texture_shader_2, {texture: new Texture("assets/mona.jpg"),ambient: 1, color: Color.of( 0,0,0,1 )}), 
+                      water : new Material(ocean, { ambient: 1, color: Color.of( 1,0,0,1 ) } )   
+
                        };
 
                                   // Some setup code that tracks whether the "lights are on" (the stars), and also
@@ -165,7 +170,7 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
 
-          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0,0,20 ) ) );
+          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0,0,20 ) ) );
 
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
@@ -234,24 +239,24 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
        let x = Math.sin(8*t);
 
        
-       
-
-
-
-       
-
-
-
 
         model_transform = Mat4.identity();
-     //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
-   // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
+        this.shapes.box.draw(context, program_state, model_transform, this.solid);
+     
   this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,34])).times(Mat4.scale([50,50,15])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
   this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,50])), this.materials. HouW);
 
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-25  ])
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 100,100,1 ]) ),
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.rotation(150,[0,0,1])).times(Mat4.translation([ 0,-20,-25  ])).times( Mat4.scale([ 200,200,1 ]) ),
                                this.materials.grass);
+
+
+
+this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.monalisa);
+
+
+this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.water);
+
+
 
   if (t < 100)
   {
@@ -677,5 +682,154 @@ class Sun_Shader extends Shader
                gl_FragColor = vec4( color.rgb, 1.0 );
                gl_FragColor *= sun_color;
         } ` ;
+    }
+}
+
+
+
+const New_Shader = defs.New_Shader =
+class New_Shader extends Shader
+{ 
+
+
+update_GPU( context, gpu_addresses, program_state, model_transform, material )
+    {
+                      // TODO (#EC 2): Pass the same information to the shader as for EC part 1.  Additionally
+                      // pass material.color to the shader.
+        const [ P, C, M ] = [ program_state.projection_transform, program_state.camera_inverse, model_transform ],
+                      PCM = P.times( C ).times( M );
+        const t = program_state.animation_time / 1000;
+       //const smoothly_varying_ratio = .5 + .5 * Math.sin( 2 * Math.PI * t/10 ),
+             // sun_color = Color.of(1,0,0, 1);
+
+
+        context.uniformMatrix4fv( gpu_addresses.projection_camera_model_transform, false, Mat.flatten_2D_to_1D( PCM.transposed() ) );
+        context.uniform4fv (gpu_addresses.color, Color.of(1,0.5,0, 1));
+        context.uniform1f ( gpu_addresses.time, program_state.animation_time / 1000 );
+        context.uniform1f ( gpu_addresses.speed, 0.0001 );
+        context.uniform1f ( gpu_addresses.brightness, 0.0018 );
+        context.uniform1f ( gpu_addresses.distfading, 0.7 );
+        context.uniform1f ( gpu_addresses.twinkleSpeed, 200 );
+
+
+    }
+  
+  shared_glsl_code()           // ********* SHARED CODE, INCLUDED IN BOTH SHADERS *********
+    { 
+                          
+
+      return `
+      
+      ` ;
+    }
+  vertex_glsl_code()           // ********* VERTEX SHADER *********
+    { 
+                                  
+      return this.shared_glsl_code() + `
+       precision highp float;
+precision highp int;
+
+uniform mat4 projection_camera_model_transform;
+
+attribute vec3 position;
+attribute vec3 normal;
+attribute vec2 uv;
+attribute vec2 uv2;
+
+varying vec2 vUv;
+varying vec3 vPosition;
+varying vec3 vNormal;
+
+void main() {
+  vUv = uv;
+  vPosition = position;
+  vNormal = normal;
+  gl_Position = projection_camera_model_transform * vec4(position, 1.0);
+} 
+`;
+    }
+  fragment_glsl_code()         // ********* FRAGMENT SHADER ********* 
+    {                          // A fragment is a pixel that's overlapped by the current triangle.
+                               // Fragments affect the final image or get discarded due to depth.  
+
+                               // TODO (#6b2.3):  Leave the main function almost blank, except assign gl_FragColor to
+                               // just equal "color", the varying you made earlier.
+      return this.shared_glsl_code() + `
+// http://casual-effects.blogspot.com/2013/08/starfield-shader.html
+
+#extension GL_OES_standard_derivatives : enable
+
+#define iterations 17
+#define volsteps 3
+#define sparsity 0.5
+#define stepsize 0.2
+ #define frequencyVariation   1.3
+
+precision highp float;
+precision highp int;
+
+varying vec2 vUv;
+varying vec3 vPosition;
+varying vec3 vNormal;
+
+uniform vec3 color;
+uniform float time;
+uniform float twinkleSpeed;
+uniform float speed;
+ 
+uniform float brightness;
+uniform float distfading;
+ 
+
+#define PI 3.141592653589793238462643383279
+
+void main( void ) {
+
+    vec2 uv = vUv.xy + 0.5;
+    uv.x += time * speed * 0.1;
+ 
+    vec3 dir = vec3(uv * 2.0, 1.0);
+ 
+    float s = 0.1, fade = 0.01;
+    vec3 starColor = vec3(0.0);
+     
+    for (int r = 0; r < volsteps; ++r) {
+        vec3 p =  (time * speed * twinkleSpeed) + dir * (s * 0.5);
+        p = abs(vec3(frequencyVariation) - mod(p, vec3(frequencyVariation * 2.0)));
+ 
+        float prevlen = 0.0, a = 0.0;
+        for (int i = 0; i < iterations; ++i) {
+            p = abs(p);
+            p = p * (1.0 / dot(p, p)) + (-sparsity); // the magic formula            
+            float len = length(p);
+            a += abs(len - prevlen); // absolute sum of average change
+            prevlen = len;
+        }
+         
+        a *= a * a; // add contrast
+         
+        // coloring based on distance        
+        starColor += (vec3(s, s*s, s*s*s) * a * brightness + 1.0) * fade;
+        fade *= distfading; // distance fading
+        s += stepsize;
+    }
+     
+    starColor = min(starColor, vec3(1.2));
+ 
+    // Detect and suppress flickering single pixels (ignoring the huge gradients that we encounter inside bright areas)
+    float intensity = min(starColor.r + starColor.g + starColor.b, 0.7);
+ 
+    vec2 sgn = (vec2(vUv.xy)) * 2.0 - 1.0;
+    vec2 gradient = vec2(dFdx(intensity) * sgn.x, dFdy(intensity) * sgn.y);
+    float cutoff = max(max(gradient.x, gradient.y) - 0.1, 0.0);
+    starColor *= max(1.0 - cutoff * 6.0, 0.3);
+ 
+    // Motion blur; increases temporal coherence of undersampled flickering stars
+    // and provides temporal filtering under true motion.  
+    gl_FragColor = vec4( starColor * color, 1.0 );
+}
+
+
+ ` ;
     }
 }
