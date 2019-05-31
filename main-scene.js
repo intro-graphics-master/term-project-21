@@ -44,7 +44,7 @@ class Solar_System extends Scene
                      'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
-                      "teapot": new Shape_From_File( "assets/dpv.obj" ),
+                     "teapot": new Solar_System( "assets/dpv.obj" ),
                       };
 
 
