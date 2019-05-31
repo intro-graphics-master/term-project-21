@@ -60,7 +60,7 @@ class Solar_System extends Scene
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
       // this.shapes.ball_repeat.arrays.texture_coord.forEach( coord => coord
-      // this.shapes.houseup.arrays.texture_coord.forEach( coord => coord.scale(0.0003));
+       this.shapes.housewall.arrays.texture_coord.forEach( coord => coord.scale(3));
 
       const phong    = new defs.Phong_Shader( 1 );
       this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of(1,1,1,1) } );// .7,.8,.6,1 
@@ -105,9 +105,10 @@ class Solar_System extends Scene
                                       ambient: 0, diffusivity: 1, specularity: 1, smoothness:10 } ), 
 
                        HouU: new Material( texture_shader_2,    
-                                    { texture: new Texture( "assets/b.jpg" ),
-                                      ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.65,0.2,0.2,1) } ),
-                        
+                                    { ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.65,0.2,0.2,1) } ),
+                        HouW: new Material( texture_shader_2,    
+                                    {  texture: new Texture( "assets/bricks.png" ),
+                                      ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.2,0.2,0.5,1) } ),
                       moon2:  new Material(  gouraud_shader,
                                    {ambient: 0, diffusivity: 1, specularity: 0.5, color: Color.of( 1,1,1,1 )}),
 
@@ -242,10 +243,10 @@ class Solar_System extends Scene
 
 
         model_transform = Mat4.identity();
-        this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
+     //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
    // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
-  this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.scale([40,40,10])).times(Mat4.translation([0,0,3])), this.materials. HouU);//.override(Color.of(1,0,0,1)) );
-  this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,40])), this.solid);
+  this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,34])).times(Mat4.scale([50,50,15])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
+  this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,50])), this.materials. HouW);
 
 
 
