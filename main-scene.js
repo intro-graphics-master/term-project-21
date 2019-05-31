@@ -20,7 +20,6 @@ class Solar_System extends Scene
                                                         // At the beginning of our program, load one of each of these shape 
                                                         // definitions onto the GPU.  NOTE:  Only do this ONCE per shape.
                                                         // Don't define blueprints for shapes in display() every frame.
-       const points = Vec.cast( [0,0,0], [0.2,0,0.2], [0.3,0,0.3], [0.4,0,0.4], [0.5, 0, 0.5], [0.5, 0, 4], [0,0,4]);//, [1.5,0,2], [2,0,2.3], [2, 0, 3.3], [0,0,3.3] );
 
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
@@ -34,7 +33,7 @@ class Solar_System extends Scene
                      'cakelayer': new Rounded_Capped_Cylinder(50,50),
                      'candlefire': new Rounded_Closed_Cone(10,10),
                      'donut' : new Torus(100, 100),
-                      'bullet': new defs.Surface_Of_Revolution( 180, 180, points )
+                      
                       };
 
 
@@ -149,7 +148,7 @@ class Solar_System extends Scene
                     // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
-          program_state.set_camera( Mat4.look_at( Vec.of( 0,10,20 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) ) );
+          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0,0,20 ) ) );
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
         }
@@ -221,7 +220,6 @@ class Solar_System extends Scene
 
 
        
-      this.shapes.bullet.draw( context, program_state, model_transform.times( Mat4.translation([-10,0,0]) ), this.materials.arms.override(Color.of(1,1,1,1)) );
 
 
 
@@ -229,7 +227,7 @@ class Solar_System extends Scene
 
   if (t < 100)
   {
-    model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.rotation(45, Vec.of(0,0,1))).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
+    model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
   }
 
 
@@ -243,10 +241,11 @@ class Solar_System extends Scene
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
-    //arms                                            
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,1,0 ))).times(Mat4.translation([1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 ))).times(Mat4.translation([-1.4,0,0])).times(Mat4.scale([0.5, 0.1, 0.1])), this.materials.arms); 
-                                                
+    //arms
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,-0.3,0])).times(Mat4.scale([0.1, 0.3, 0.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,-0.3,0])).times(Mat4.scale([0.3, 0.1, 0.1])), this.materials.arms); 
+                                                 
+           //.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 )))                                     
 
   //legs
      this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 ))).times(Mat4.translation([.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms); 
