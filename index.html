@@ -5,13 +5,14 @@
 
       <!-- The following code embeds a WebGL canvas panel, loads certain scene(s), and displays panel(s) of their controls. //-->
 <div id="main-canvas" class="canvas-widget"></div>
+
 <script type=module >      // ********************* THE ENTRY POINT OF YOUR WHOLE PROGRAM STARTS HERE ********************* 
                            // Indicate which element on the page you want the Canvas_Widget to replace with a 3D WebGL area:
   const element_to_replace = document.querySelector( "#main-canvas" );
   import { Main_Scene, Additional_Scenes, Canvas_Widget } from './main-scene.js';  // Import the file that defines a scene.
   const scenes = [ Main_Scene, ...Additional_Scenes ].map( scene => new scene() );    // This line creates your scene.
 //var scene;
-//  new Canvas_Widget( element_to_replace, scenes );
+  new Canvas_Widget( element_to_replace, scenes );
 
 </script>
 
@@ -21,42 +22,24 @@
                     // Indicate which element on the page you want the Code_Widget to replace with a code readout:
   const element_to_replace = document.querySelector( "#main-code" );
    import { Main_Scene, Additional_Scenes, Code_Widget, defs } from './main-scene.js';  // Import the file that defines a scene.
-//   new Code_Widget( element_to_replace, Main_Scene, Additional_Scenes, defs );
+  new Code_Widget( element_to_replace, Main_Scene, Additional_Scenes, defs );
 </script>
-
-</div>
+ 
+<!-- </div>
 
 		<script src="./thr/three.js"></script>
 
 		<script src="./thr/WebGL.js"></script>
 		<script src="./thr/OrbitControls.js"></script>
-		<script src="./thr/stats.min.js"></script>
+		<script src="./thr/stats.min.js"></script> -->
 
-<script>
-			/* testing cloth simulation */
-			var pinsFormation = [];
-			var pins = [ 6 ];
-			pinsFormation.push( pins );
-			pins = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ];
-			pinsFormation.push( pins );
-			pins = [ 0 ];
-			pinsFormation.push( pins );
-			pins = []; // cut the rope ;)
-			pinsFormation.push( pins );
-//			pins = [ 0, cloth.w ]; // classic 2 pins
-			pinsFormation.push( pins );
-			pins = pinsFormation[ 1 ];
-			function togglePins() {
-				pins = pinsFormation[ ~~ ( Math.random() * pinsFormation.length ) ];
-			}
+ <!--<script>
+
 			if ( WEBGL.isWebGLAvailable() === false ) {
 				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
 			}
 			var container, stats;
 			var camera, renderer;// scene,
-
-//			var clothGeometry;
-//			var sphere;
 			var object;
 			init();
 			animate();
@@ -115,9 +98,8 @@
  				container.appendChild( stats.dom );
  				//
  				window.addEventListener( 'resize', onWindowResize, false );
-// 			//	sphere.visible = ! true;
  			}
-// 			//
+
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -126,12 +108,11 @@
 			//
 			function animate() {
 				requestAnimationFrame( animate );
-				var time = Date.now();
 				render();
 				stats.update();
 			}
 			function render() {
 				renderer.render( scene, camera );
 			}
-		</script>
+		</script> -->
 </body></html>

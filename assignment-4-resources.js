@@ -367,8 +367,6 @@ const Rounded_Capped_Cylinder = defs.Rounded_Capped_Cylinder =
 class Rounded_Capped_Cylinder extends Surface_Of_Revolution   // An alternative without three separate sections
   { constructor ( rows, columns, texture_range ) { super( rows, columns, Vec.cast( [0, 0, .5], [1, 0, .5], [1, 0, -.5], [0, 0, -.5] ), texture_range ); } }
   
-  
-
 const Minimal_Shape = defs.Minimal_Shape =
 class Minimal_Shape extends tiny.Vertex_Buffer
 {                                     // **Minimal_Shape** an even more minimal triangle, with three

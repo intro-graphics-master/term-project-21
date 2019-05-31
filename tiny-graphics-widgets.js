@@ -15,7 +15,7 @@ class Canvas_Widget
   constructor( element, initial_scenes, options )   
     { this.element = element;
       Object.assign( this, { show_canvas: true, make_controls: true, show_explanation: true }, options )
-      const rules = [ ".canvas-widget { width: 1080px; background: DimGray; margin:auto }",
+      const rules = [ ".canvas-widget { width: 1080px; background: DarkGray; margin:auto }",
                       ".canvas-widget canvas { width: 1080px; height: 600px; margin-bottom:-3px }" ];
                       
       if( document.styleSheets.length == 0 ) document.head.appendChild( document.createElement( "style" ) );
