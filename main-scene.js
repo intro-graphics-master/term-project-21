@@ -5,7 +5,7 @@ const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
 
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus , Surface_Of_Revolution, Cylindrical_Tube,Cone_Tip} = defs;
+const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus , Surface_Of_Revolution, Cylindrical_Tube,Cone_Tip} = defs;
 
 
 
@@ -35,7 +35,7 @@ class Solar_System extends Scene
                  'sphere1'  : new Subdivision_Sphere(1),
                  'cylinder' : new Capped_Cylinder(4,20),
                  'test' : new Windmill(3),
- 
+                  'square' : new Square(),
                      'donut' : new Torus(100, 100),
 
                  //'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
@@ -44,7 +44,7 @@ class Solar_System extends Scene
                      'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
-
+                      "teapot": new Shape_From_File( "assets/dpv.obj" ),
                       };
 
 
@@ -122,8 +122,9 @@ class Solar_System extends Scene
                       cake1: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 1,0.6,0.9,1 ) }),
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
-                      fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
-
+                      fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
+ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
                        };
 
                                   // Some setup code that tracks whether the "lights are on" (the stars), and also
@@ -247,14 +248,16 @@ class Solar_System extends Scene
   this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.scale([40,40,10])).times(Mat4.translation([0,0,3])), this.materials. HouU);//.override(Color.of(1,0,0,1)) );
   this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,40])), this.solid);
 
-
+this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-20  ])
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 100,100,1 ]) ),
+                               this.materials.grass);
 
   if (t < 100)
   {
     model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
   }
 
-   
+  
 
                              
        
