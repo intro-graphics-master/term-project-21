@@ -775,8 +775,13 @@ class Webgl_Manager
       const gl = this.context;
 
       this.set_size( dimensions );
-               
-      gl.clearColor.apply( gl, background_color );           // Tell the GPU which color to clear the canvas with each frame.
+      //if(typeof(background_color) == Color ){
+         gl.clearColor.apply( gl, background_color );           // Tell the GPU which color to clear the canvas with each frame.
+       
+      
+
+   //   texture: new Texture('./thr/grasslight-big.jpg');
+      
       gl.getExtension( "OES_element_index_uint" );           // Load an extension to allow shapes with more than 65535 vertices.
       gl.enable( gl.DEPTH_TEST );                            // Enable Z-Buffering test.
                         // Specify an interpolation method for blending "transparent" triangles over the existing pixels:
@@ -785,6 +790,7 @@ class Webgl_Manager
                                               // Store a single red pixel, as a placeholder image to prevent a console warning:
       gl.bindTexture(gl.TEXTURE_2D, gl.createTexture() );
       gl.texImage2D (gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 0, 255]));
+     // }
 
               // Find the correct browser's version of requestAnimationFrame() needed for queue-ing up re-display events:
       window.requestAnimFrame = ( w =>
