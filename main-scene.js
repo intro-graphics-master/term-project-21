@@ -44,7 +44,7 @@ class Solar_System extends Scene
                      'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
-                      "teapot": new Shape_From_File( "assets/dpv.obj" ),
+                    //  "teapot": new Shape_From_File( "assets/dpv.obj" ),
                       };
 
 
@@ -249,7 +249,7 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
   this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,34])).times(Mat4.scale([50,50,15])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
   this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,50])), this.materials. HouW);
 
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-20  ])
+this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-25  ])
                                        .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 100,100,1 ]) ),
                                this.materials.grass);
 
@@ -268,7 +268,7 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-20  ]
       const modifier = this.lights_on ? { ambient: 0.7 } : { ambient: 0.0 };
 
   // body
-     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2.override(modifier));
+     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
     //arms
