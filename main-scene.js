@@ -1,9 +1,13 @@
 import {tiny, defs} from './assignment-4-resources.js';
+//import {OrbitControls}  from'./thr/OrbitControls.js';
                                                                 // Pull these names into this module's scope for convenience:
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
-const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder } = defs;
+const { Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, 
+                           Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder,
+                            Cylindrical_Tube,Cone_Tip
+                            } = defs;
 
 
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
@@ -20,6 +24,9 @@ class Solar_System extends Scene
                                                         // At the beginning of our program, load one of each of these shape 
                                                         // definitions onto the GPU.  NOTE:  Only do this ONCE per shape.
                                                         // Don't define blueprints for shapes in display() every frame.
+               //[0,4,3.8], [.5,0,1], [.5,0,.8], [.4,0,.7], [.4,0,.5], [.5,0,.4], [.5,0,-1], [.4,0,-1.5], [.25,0,-1.8], [0,0,-1.7] 
+      const points = Vec.cast([],[],[],[],[],[]
+                       );
 
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
@@ -27,17 +34,23 @@ class Solar_System extends Scene
 
                      'star' : new Planar_Star(), 
                  'sphere1'  : new Subdivision_Sphere(1),
-                 'cylinder' : new Rounded_Capped_Cylinder(50,50),
-                 'sphere6'  : new Subdivision_Sphere(6),
+                 'cylinder' : new Capped_Cylinder(4,20),
                  'test' : new Windmill(3),
-                     'cakelayer': new Rounded_Capped_Cylinder(50,50),
-                     'candlefire': new Rounded_Closed_Cone(10,10)
+                 //'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
+                     'cakelayer': new Capped_Cylinder(4,20),
+                     'candlefire': new Closed_Cone(4,10),
+                     'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
+                     'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
+                       'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
                       };
 
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
       // this.shapes.ball_repeat.arrays.texture_coord.forEach( coord => coord
-      
+      // this.shapes.houseup.arrays.texture_coord.forEach( coord => coord.scale(0.0003));
+
+      const phong    = new defs.Phong_Shader( 1 );
+      this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of(1,1,1,1) } );// .7,.8,.6,1 
                                                               // *** Shaders ***
 
                                                               // NOTE: The 2 in each shader argument refers to the max
@@ -73,14 +86,14 @@ class Solar_System extends Scene
                      metal_earth: new Material( texture_shader_2,    
                                     { texture: new Texture( "assets/earth.gif" ),
                                       ambient: 0, diffusivity: 1, specularity: 1, color: Color.of( .5,.5,.5,1 ) } ),
-                                   
+                                   //b.jpg
                       PLN4: new Material( texture_shader_2,    
                                     { texture: new Texture( "assets/bricks.png","NEAREST" ),
                                       ambient: 0, diffusivity: 1, specularity: 1, smoothness:10 } ), 
 
-                       PLN5: new Material( texture_shader_2,    
-                                    { texture: new Texture( "assets/bricks.png" ),
-                                      ambient: 0, diffusivity: 1, specularity: 1, smoothness:10 } ),
+                       HouU: new Material( texture_shader_2,    
+                                    { texture: new Texture( "assets/b.jpg" ),
+                                      ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.65,0.2,0.2,1) } ),
                         
                       moon2:  new Material(  gouraud_shader,
                                    {ambient: 0, diffusivity: 1, specularity: 0.5, color: Color.of( 1,1,1,1 )}),
@@ -136,7 +149,7 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
                     // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
-          program_state.set_camera( Mat4.look_at( Vec.of( 0,10,20 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) ) );
+          program_state.set_camera( Mat4.look_at( Vec.of( 1,0,0 ), Vec.of( 0,1,0 ), Vec.of( 0,0,1 ) ) );
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
         }
@@ -147,7 +160,7 @@ fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } )
 
                                                   // Have to reset this for each frame:
       this.camera_teleporter.cameras = [];
-      this.camera_teleporter.cameras.push( Mat4.look_at( Vec.of( 0,10,20 ), Vec.of( 0,0,0 ), Vec.of( 0,1,0 ) ) );
+      this.camera_teleporter.cameras.push( Mat4.look_at( Vec.of( 1,0,0 ), Vec.of( 0,1,0 ), Vec.of( 0,0,1 ) ) );
 
 
                                              // Variables that are in scope for you to use:
@@ -223,7 +236,11 @@ let model_transform = Mat4.identity();
 
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
-       
+        model_transform = Mat4.identity();
+        this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
+   // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
+  this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.scale([40,40,10])).times(Mat4.translation([0,0,3])), this.materials. HouU);//.override(Color.of(1,0,0,1)) );
+  this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,40])), this.solid);
 
 
   if (t < 100)
@@ -232,14 +249,14 @@ let model_transform = Mat4.identity();
     model_transform = model_transform.times(Mat4.rotation(90, [-1,0,0])).times(Mat4.rotation(45, Vec.of(0,0,1))).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
   }
 
-
+   
 
                              
-      const modifier = this.lights_on ? { ambient: 1 } : { ambient: 0.0 };
+      const modifier = this.lights_on ? { ambient: 0.7 } : { ambient: 0.0 };
       
           
   // body
-     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
+     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2.override(modifier));
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
     //arms                                            
@@ -258,6 +275,9 @@ let model_transform = Mat4.identity();
 
                             // new value based on our light switch.                         
       //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
+      
+
+
 
 //candlefire      
       //model_transform = Mat4.identity();
@@ -276,13 +296,13 @@ for (let i = 0; i < 9; i++)
       let can1f = can1.times( Mat4.translation([0,0,1.5-t/20]));
       this.shapes.ball_4.draw(context,program_state,
                                        can1f.times( Mat4.scale([0.2, 0.2, 0.2 ]) ),
-                                      this.materials.fire.override(blue)); 
+                                      this.materials.fire); 
             
       this.shapes.candlefire.draw(context,program_state,
-                                   can1f.times(Mat4.rotation(270,Vec.of(1,0,0))).times( Mat4.translation([0,0,0.25])).times( Mat4.scale([0.2, 0.2, 0.2 ])),//.times( Mat4.scale([0.1, 0.1, 3 ]) ),
+                                   can1f.times(Mat4.rotation(270,Vec.of(1,0,0))).times( Mat4.translation([0,0,0.24])).times( Mat4.scale([0.2, 0.2, 0.2 ])),//.times( Mat4.scale([0.1, 0.1, 3 ]) ),
                                    this.materials.fire.override(modifier)); 
     }
-      
+ 
 
 }
 
