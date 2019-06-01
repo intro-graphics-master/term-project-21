@@ -16,7 +16,7 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
 
 // (Can define Main_Scene's class here)
-
+var i = 1;
 export class Shape_From_File extends Shape
 {                                   // **Shape_From_File** is a versatile standalone Shape that imports
                                     // all its arrays' data from an .obj 3D model file.
@@ -495,10 +495,21 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ]
 
     
      let car_model = Mat4.identity();
-     //car                               
-this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
-    
+     //car
+     if(i<10){                               
+        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
+        //i = i
+     }
+
+     if(i>=11){                               
+        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
      
+     }
+    if(i>21){
+      i = i -21;
+    }
+    i++;
+    
     // this.shapes.teapot.draw( context, program_state, model_transform,this.materials.plastic_stars);                        
        
      this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
