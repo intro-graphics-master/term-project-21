@@ -36,15 +36,18 @@ class Solar_System extends Scene
                  'cylinder' : new Capped_Cylinder(4,20),
                  'test' : new Windmill(3),
                   'square' : new Square(),
+                  'square1' : new Square(),
                      'donut' : new Torus(100, 100),
 
-                 //'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
+                 'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
                      'cakelayer': new Capped_Cylinder(4,20),
                      'candlefire': new Closed_Cone(4,10),
                      'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
                     //  "teapot": new Shape_From_File( "assets/dpv.obj" ),
+                     'TV': new defs.Cube() 
+                     //'text': new Text_Line( 35 )
                       };
 
 
@@ -60,7 +63,7 @@ class Solar_System extends Scene
                                                         // TODO (#1d): Modify one sphere shape's existing texture 
                                                         // coordinates in place.  Multiply them all by 5.
       // this.shapes.ball_repeat.arrays.texture_coord.forEach( coord => coord
-       this.shapes.housewall.arrays.texture_coord.forEach( coord => coord.scale(3));
+       this.shapes.square1.arrays.texture_coord.forEach( coord => coord.scale(3));
 
       const phong    = new defs.Phong_Shader( 1 );
       this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of(1,1,1,1) } );// .7,.8,.6,1 
@@ -108,6 +111,9 @@ class Solar_System extends Scene
                                     { ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.65,0.2,0.2,1) } ),
                         HouW: new Material( texture_shader_2,    
                                     {  texture: new Texture( "assets/bricks.png" ),
+                                      ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.2,0.2,0.5,1) } ),
+                        HouW1: new Material( texture_shader_2,    
+                                    {  texture: new Texture( "assets/bricks1.png" ),
                                       ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.2,0.2,0.5,1) } ),
                       moon2:  new Material(  gouraud_shader,
                                    {ambient: 0, diffusivity: 1, specularity: 0.5, color: Color.of( 1,1,1,1 )}),
@@ -165,7 +171,7 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
 
-          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0,0,20 ) ) );
+          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0,0,20 ) ) );
 
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
@@ -246,11 +252,77 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
         model_transform = Mat4.identity();
      //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
    // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
-  this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,34])).times(Mat4.scale([50,50,15])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
-  this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,50])), this.materials. HouW);
+ // this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,48])).times(Mat4.scale([100,100,30])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
+  
+  this.shapes.tri.draw( context, program_state, model_transform,this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
+  //this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([60,60,40])), this.materials. HouW);
+//floor
+this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,-39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
+                               this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
+//walls
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([0,59.9,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials.plastic.override(Color.of(1,0.5,0.5,1))); 
+this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.translation([0,60,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials. HouW1); 
 
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-25  ])
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 100,100,1 ]) ),
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([0,-59.9,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),//.translation([ 0,0,39.9  ])
+                               this.materials.plastic.override(Color.of(1,1,0.4,1))); 
+this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.translation([0,-60,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials. HouW1);                                
+
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([-59.9,0,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),//.translation([ 0,0,39.9  ])
+                               this.materials.plastic.override(Color.of(0.2,1,0.4,1))); 
+this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.translation([-60,0,0])).times( Mat4.scale([ 60,60,40 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials. HouW);   
+
+
+// this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,0,0])).times( Mat4.scale([ 60,60,40 ]) )
+//                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+//                                this.materials.plastic.override(Color.of(1,0.8,1,1))); 
+//this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.translation([60,0,0])).times( Mat4.scale([ 60,60,40 ]) )
+//                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+//                               this.materials. HouW);   
+//windows and door
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,0,35])).times( Mat4.scale([ 0,60,5 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
+
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,30,25])).times( Mat4.scale([ 0,10,5 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
+
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-20,10])).times( Mat4.scale([ 0,40,20 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,50,10])).times( Mat4.scale([ 0,10,20 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
+                                                                                             
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,20,-20])).times( Mat4.scale([ 0,40,20 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1)));                                
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-50,-20])).times( Mat4.scale([ 0,10,20 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-30,-5])).times( Mat4.scale([ 0,10,5 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
+
+//ceiling                                                              
+this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
+                               this.materials.plastic.override(Color.of(0.5,1,1,1)));   
+
+
+
+//grass
+this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ])
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
                                this.materials.grass);
 
   if (t < 100)
