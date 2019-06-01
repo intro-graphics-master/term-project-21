@@ -46,7 +46,8 @@ class Solar_System extends Scene
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
                     //  "teapot": new Shape_From_File( "assets/dpv.obj" ),
-                     'TV': new defs.Cube(), 'text': new Text_Line( 35 )
+                     'TV': new defs.Cube() 
+                     //'text': new Text_Line( 35 )
                       };
 
 
