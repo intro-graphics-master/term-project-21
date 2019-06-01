@@ -390,7 +390,7 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,39.9  ])
 
 //grass
 this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ])
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 500,500,1 ]) ),
                                this.materials.grass);
 
 //computer, key_board,mouse
