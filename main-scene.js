@@ -195,7 +195,8 @@ class Solar_System extends Scene
                        'bed': new Shape_From_File( "assets/BED.obj" ),
 
                      'TV':  new Shape_From_File( "assets/monitor.obj" ),
-                    'Tund':  new Shape_From_File( "assets/TVtable.obj" )
+                    'Tund':  new Shape_From_File( "assets/TVtable.obj" ),
+                    'Pillow':  new Shape_From_File( "assets/pillow.obj" )
                      //'text': new Text_Line(35)
                       };
 
@@ -217,6 +218,7 @@ class Solar_System extends Scene
       // this.shapes.ball_repeat.arrays.texture_coord.forEach( coord => coord
        this.shapes.square1.arrays.texture_coord.forEach( coord => coord.scale(3));
      this.shapes.ball_4.arrays.texture_coord.forEach( coord => coord.scale(5));
+     this.shapes.Pillow.arrays.texture_coord.forEach( coord => coord.scale(5));
       const phong    = new defs.Phong_Shader( 1 );
       this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of(1,1,1,1) } );// .7,.8,.6,1 
                                                               // *** Shaders ***
@@ -297,7 +299,9 @@ class Solar_System extends Scene
               sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
                bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
-                        ambient: 0.5, diffusivity: 1, specularity: 0 } ),//, color: Color.of( 0,0,0,1 )
+                        ambient: 0.5, diffusivity: 1, specularity: 0 } ),
+                pillow_texture: new Material(texture_shader_2, { texture: new Texture( "assets/stars.png" ),
+                        ambient:1, diffusivity: 1, specularity: 0 } ),
                  text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
                                                  texture: new Texture( "assets/TV.gif" ) })   
                        };
@@ -422,6 +426,7 @@ class Solar_System extends Scene
 
 
         model_transform = Mat4.identity();
+        model_transform =model_transform .times(Mat4.scale([0.3,0.3,0.3,1]));
      //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
    // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
 
@@ -432,7 +437,7 @@ class Solar_System extends Scene
   //                           this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
   this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([200,200,200])), this.materials.sky_texture);
 //floor
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,-39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([ 0,0,-39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
 //walls
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([0,59.9,0])).times( Mat4.scale([ 60,60,40 ]) )
@@ -464,61 +469,84 @@ this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.tra
 //                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
 //                               this.materials. HouW);   
 //windows and door
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,0,35])).times( Mat4.scale([ 0,60,5 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,0,35])).times( Mat4.scale([ 0,60,5 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
 
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,30,25])).times( Mat4.scale([ 0,10,5 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,30,25])).times( Mat4.scale([ 0,10,5 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
 
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-20,10])).times( Mat4.scale([ 0,40,20 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,-20,10])).times( Mat4.scale([ 0,40,20 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,50,10])).times( Mat4.scale([ 0,10,20 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,50,10])).times( Mat4.scale([ 0,10,20 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
                                                                                              
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,20,-20])).times( Mat4.scale([ 0,40,20 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,20,-20])).times( Mat4.scale([ 0,40,20 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1)));                                
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-50,-20])).times( Mat4.scale([ 0,10,20 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,-50,-20])).times( Mat4.scale([ 0,10,20 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1))); 
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,-30,-5])).times( Mat4.scale([ 0,10,5 ]) )
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,-30,-5])).times( Mat4.scale([ 0,10,5 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
 
 //ceiling                                                              
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
+this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.5,1,1,1)));   
 
 
 
 //grass
-this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ])
+this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,-40  ]))
                                        .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
                                this.materials.grass);
 
 //computer, key_board,mouse
-this.shapes.TV.draw( context, program_state, Mat4.translation([ -33,-50,-15  ]).times( Mat4.scale([ 10,10,10]) )
+this.shapes.TV.draw( context, program_state,  model_transform.times(Mat4.translation([ -35,-50,-17  ])).times( Mat4.scale([ 10,10,10]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));  
 
 
 if(this.lights_on){
-//  const t1 = program_state.animation_time/1000;
-//  while(t1<100){
-  this.shapes.square.draw( context, program_state, Mat4.translation([ -33,-49.5,-13  ]).times( Mat4.scale([ 11.5,15,6]) )
+
+  this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ -35,-49.5,-15.7  ])).times( Mat4.scale([ 11.5,15,6]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.text_image);//}
 }else{
-  this.shapes.square.draw( context, program_state, Mat4.translation([ -33,-49.5,-13  ]).times( Mat4.scale([ 11.5,15,6]) )
+  this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ -35,-49.5,-15.7  ])).times( Mat4.scale([ 11.5,15,6]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.metal);  
 }
 
+//  const t1 = program_state.animation_time/1000;
+//  while(t1<100){
 
+//door 
+
+  let doorP=model_transform.times(Mat4.translation([60,-30,-25]));
+const t1 = program_state.animation_time/1000;
+
+let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
+//                                        .times(Mat4.translation([0,-10 ,0 ]))
+//                                        .times( Mat4.scale([ 0.1,10,15 ]) );
+if(t1<15 && t1>=0){
+this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation(t/15*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
+                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+ }
+else if(t1<=30 && t1>=15){
+this.shapes.box.draw( context, program_state, OPENDOOR
+                                       .times( Mat4.rotation((t)/15 * Math.PI/2, Vec.of( 0,0,1 ) ) )
+                                       .times(Mat4.translation([0,10 ,0 ]))
+                                       .times( Mat4.scale([ 0.1,10,15 ]) ),
+                               this.materials.plastic.override(Color.of(1,0,0,1)));
+ }
+else{this.shapes.box.draw( context, program_state, doorP.times( Mat4.rotation( Math.PI, Vec.of( 0,1,0 ) ) ).times( Mat4.scale([ 0.1,10,15 ]) ),
+                               this.materials.plastic.override(Color.of(1,0,0,1)));}
 
 //const t1 = program_state.animation_time/1000;
   //    const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
@@ -560,33 +588,37 @@ if(this.lights_on){
 //         } 
                            
 //Tund
-this.shapes.Tund.draw( context, program_state, Mat4.translation([ -10,-46,-35  ]).times( Mat4.scale([ 20,10,10]) )
+this.shapes.Tund.draw( context, program_state, model_transform.times( Mat4.translation([ -10,-46,-35  ])).times( Mat4.scale([ 20,10,10]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),  
                              this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));
  //bed   
-this.shapes.bed.draw( context, program_state, Mat4.translation([ -39,47,-32  ]).times( Mat4.scale([ 20,20,20 ]) )
+this.shapes.bed.draw( context, program_state,  model_transform.times(Mat4.translation([ -29,40,-27.2  ])).times( Mat4.scale([ 30,30,30 ]) )
                                             .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
-                               this.materials.bed_texture);   //.override(Color.of(0.5,1,1,1))
+                               this.materials.bed_texture);  
+//PILLOW
+this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.translation([ -53,40,-22  ])).times( Mat4.scale([ 5,5,5 ]) )
+                                            .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
+                               this.materials.pillow_texture);  
 
 
-
-  if (t < 100)
-  {
-    model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
-  }
+ 
 
     
-     let car_model = Mat4.identity();
+     let car_model =model_transform .times(Mat4.scale([0.3,0.3,0.3,1])); //Mat4.identity();
      //car                               
-this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
+this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40])),this.materials.car_texture); 
     
      
     // this.shapes.teapot.draw( context, program_state, model_transform,this.materials.plastic_stars);                        
        
-     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
-     this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
-
+     
       const modifier = this.lights_on ? { ambient: 0.7 } : { ambient: 0.0 };
+ if (t < 100)
+  {
+    model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
+  }
+  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
+  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
 
   // body
      this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
