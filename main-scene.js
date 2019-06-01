@@ -5,7 +5,10 @@ const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
          Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
 
 
-const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, Torus , Surface_Of_Revolution, Cylindrical_Tube,Cone_Tip} = defs;
+const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
+ Windmill, Closed_Cone, Rounded_Closed_Cone, Capped_Cylinder, Rounded_Capped_Cylinder, 
+ Torus , Surface_Of_Revolution, Cylindrical_Tube,Cone_Tip
+ } = defs;
 
 
 
@@ -13,6 +16,54 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base, Windmill, Clos
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
 
 // (Can define Main_Scene's class here)
+
+export class Text_Line extends Shape                
+{                           // **Text_Line** embeds text in the 3D world, using a crude texture 
+                            // method.  This Shape is made of a horizontal arrangement of quads.
+                            // Each is textured over with images of ASCII characters, spelling 
+                            // out a string.  Usage:  Instantiate the Shape with the desired
+                            // character line width.  Then assign it a single-line string by calling
+                            // set_string("your string") on it. Draw the shape on a material
+                            // with full ambient weight, and text.png assigned as its texture 
+                            // file.  For multi-line strings, repeat this process and draw with
+                            // a different matrix.
+  constructor( max_size )                           
+    { super( "position", "normal", "texture_coord" );
+      this.max_size = max_size;
+      var object_transform = Mat4.identity();
+      for( var i = 0; i < max_size; i++ )
+      {                                       // Each quad is a separate Square instance:
+        defs.Square.insert_transformed_copy_into( this, [], object_transform );
+        object_transform.post_multiply( Mat4.translation([ 1.5,0,0 ]) );
+      }
+    }
+  set_string( line, context )
+    {           // set_string():  Call this to overwrite the texture coordinates buffer with new 
+                // values per quad, which enclose each of the string's characters.
+      this.arrays.texture_coord = [];
+      for( var i = 0; i < this.max_size; i++ )
+        {
+          var row = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) / 16 ),
+              col = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) % 16 );
+
+          var skip = 3, size = 32, sizefloor = size - skip;
+          var dim = size * 16,  
+              left  = (col * size + skip) / dim,      top    = (row * size + skip) / dim,
+              right = (col * size + sizefloor) / dim, bottom = (row * size + sizefloor + 5) / dim;
+
+          this.arrays.texture_coord.push( ...Vec.cast( [ left,  1-bottom], [ right, 1-bottom ],
+                                                       [ left,  1-top   ], [ right, 1-top    ] ) );
+        }
+      if( !this.existing )
+        { this.copy_onto_graphics_card( context );
+          this.existing = true;
+        }
+      else
+        this.copy_onto_graphics_card( context, ["texture_coord"], false );
+    }
+}
+
+
 
 const Main_Scene =
 class Solar_System extends Scene
@@ -24,8 +75,8 @@ class Solar_System extends Scene
                                                         // definitions onto the GPU.  NOTE:  Only do this ONCE per shape.
                                                         // Don't define blueprints for shapes in display() every frame.
                //[0,4,3.8], [.5,0,1], [.5,0,.8], [.4,0,.7], [.4,0,.5], [.5,0,.4], [.5,0,-1], [.4,0,-1.5], [.25,0,-1.8], [0,0,-1.7] 
-      const points = Vec.cast([],[],[],[],[],[]
-                       );
+      //const points = Vec.cast([],[],[],[],[],[]
+          //             );
 
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
@@ -42,12 +93,12 @@ class Solar_System extends Scene
                  'tri' : new defs.Regular_2D_Polygon( 1, 3 ),
                      'cakelayer': new Capped_Cylinder(4,20),
                      'candlefire': new Closed_Cone(4,10),
-                     'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
+                 //    'bullet': new defs.Surface_Of_Revolution( 9, 9, points ),
                      'houseup' : new defs.Cone_Tip (4, 4,  [[0,1],[0,1]] ),
                        'housewall' : new defs.Cylindrical_Tube  ( 1, 4,  [[0,2],[0,1]] ),
                     //  "teapot": new Shape_From_File( "assets/dpv.obj" ),
-                     'TV': new defs.Cube() 
-                     //'text': new Text_Line( 35 )
+                     'TV': new defs.Cube() ,
+                     'te': new Text_Line(35)
                       };
 
 
@@ -254,7 +305,9 @@ ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
    // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
  // this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,48])).times(Mat4.scale([100,100,30])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
   
-  this.shapes.tri.draw( context, program_state, model_transform,this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
+//  this.shapes.tri.draw( context, program_state, model_transform.times( Mat4.scale([ 60,60,60 ]) )
+   //                                    .times( Mat4.rotation( 90, Vec.of( 1,0,0 ) ) ),
+  //                           this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
   //this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([60,60,40])), this.materials. HouW);
 //floor
 this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,-39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
@@ -324,6 +377,11 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,39.9  ])
 this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ])
                                        .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
                                this.materials.grass);
+
+//computer, key_board,mouse
+
+
+
 
   if (t < 100)
   {
