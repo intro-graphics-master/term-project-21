@@ -129,7 +129,7 @@ class Solar_System extends Scene
                       grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ), ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
                       monalisa : new Material(texture_shader_2, {texture: new Texture("assets/mona.jpg"),ambient: 1, color: Color.of( 0,0,0,1 )}), 
-                      water : new Material(ocean, { ambient: 1, color: Color.of( 1,0,0,1 ) } )   
+                      water : new Material(ocean, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 1,0,0,1 ) } )   
 
                        };
 
@@ -247,15 +247,14 @@ class Solar_System extends Scene
   this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,34])).times(Mat4.scale([50,50,15])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
   this.shapes.housewall.draw( context, program_state, model_transform.times(Mat4.scale([40,40,50])), this.materials. HouW);
 
-this.shapes.square.draw( context, program_state, model_transform.times(Mat4.rotation(150,[0,0,1])).times(Mat4.translation([ 0,-20,-25  ])).times( Mat4.scale([ 200,200,1 ]) ),
-                               this.materials.grass);
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.rotation(150,[0,0,1])).times(Mat4.translation([ 0,-20,-25  ])).times( Mat4.scale([ 200,200,1 ]) ), this.materials.grass);
 
 
 
-this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.monalisa);
+this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.arms);
 
 
-this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.water);
+//this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([5,0.001,5])), this.materials.water);
 
 
 
@@ -278,8 +277,8 @@ this.shapes.box.draw (context, program_state, model_transform.times(Mat4.scale([
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
     //arms
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,-0.3,0])).times(Mat4.scale([0.1, 0.3, 0.1])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,-0.3,0])).times(Mat4.scale([0.3, 0.1, 0.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
                                                  
            //.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 )))                                     
 
