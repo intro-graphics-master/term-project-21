@@ -2,7 +2,8 @@ import {tiny, defs} from './assignment-4-resources.js';
 //import {OrbitControls}  from'./thr/OrbitControls.js';
                                                                 // Pull these names into this module's scope for convenience:
 const { Vec, Mat, Mat4, Color, Light, Shape, Shader, Material, Texture,
-         Scene, Canvas_Widget, Code_Widget, Text_Widget } = tiny;
+         Scene, Canvas_Widget, Code_Widget, Text_Widget 
+         } = tiny;
 
 
 const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
@@ -109,52 +110,52 @@ export class Shape_From_File extends Shape
     }
 }
 
-export class Text_Line extends Shape                
-{                           // **Text_Line** embeds text in the 3D world, using a crude texture 
-                            // method.  This Shape is made of a horizontal arrangement of quads.
-                            // Each is textured over with images of ASCII characters, spelling 
-                            // out a string.  Usage:  Instantiate the Shape with the desired
-                            // character line width.  Then assign it a single-line string by calling
-                            // set_string("your string") on it. Draw the shape on a material
-                            // with full ambient weight, and text.png assigned as its texture 
-                            // file.  For multi-line strings, repeat this process and draw with
-                            // a different matrix.
-  constructor( max_size )                           
-    { super( "position", "normal", "texture_coord" );
-      this.max_size = max_size;
-      var object_transform = Mat4.identity();
-      for( var i = 0; i < max_size; i++ )
-      {                                       // Each quad is a separate Square instance:
-        defs.Square.insert_transformed_copy_into( this, [], object_transform );
-        object_transform.post_multiply( Mat4.translation([ 1.5,0,0 ]) );
-      }
-    }
-  set_string( line, context )
-    {           // set_string():  Call this to overwrite the texture coordinates buffer with new 
-                // values per quad, which enclose each of the string's characters.
-      this.arrays.texture_coord = [];
-      for( var i = 0; i < this.max_size; i++ )
-        {
-          var row = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) / 16 ),
-              col = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) % 16 );
+// export class Text_Line extends Shape                
+// {                           // **Text_Line** embeds text in the 3D world, using a crude texture 
+//                             // method.  This Shape is made of a horizontal arrangement of quads.
+//                             // Each is textured over with images of ASCII characters, spelling 
+//                             // out a string.  Usage:  Instantiate the Shape with the desired
+//                             // character line width.  Then assign it a single-line string by calling
+//                             // set_string("your string") on it. Draw the shape on a material
+//                             // with full ambient weight, and text.png assigned as its texture 
+//                             // file.  For multi-line strings, repeat this process and draw with
+//                             // a different matrix.
+//   constructor( max_size )                           
+//     { super( "position", "normal", "texture_coord" );
+//       this.max_size = max_size;
+//       var object_transform = Mat4.identity();
+//       for( var i = 0; i < max_size; i++ )
+//       {                                       // Each quad is a separate Square instance:
+//         defs.Square.insert_transformed_copy_into( this, [], object_transform );
+//         object_transform.post_multiply( Mat4.translation([ 1.5,0,0 ]) );
+//       }
+//     }
+//   set_string( line, context )
+//     {           // set_string():  Call this to overwrite the texture coordinates buffer with new 
+//                 // values per quad, which enclose each of the string's characters.
+//       this.arrays.texture_coord = [];
+//       for( var i = 0; i < this.max_size; i++ )
+//         {
+//           var row = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) / 16 ),
+//               col = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) % 16 );
 
-          var skip = 3, size = 32, sizefloor = size - skip;
-          var dim = size * 16,  
-              left  = (col * size + skip) / dim,      top    = (row * size + skip) / dim,
-              right = (col * size + sizefloor) / dim, bottom = (row * size + sizefloor + 5) / dim;
+//           var skip = 3, size = 32, sizefloor = size - skip;
+//           var dim = size * 16,  
+//               left  = (col * size + skip) / dim,      top    = (row * size + skip) / dim,
+//               right = (col * size + sizefloor) / dim, bottom = (row * size + sizefloor + 5) / dim;
 
-          this.arrays.texture_coord.push( ...Vec.cast( [ left,  1-bottom], [ right, 1-bottom ],
-                                                       [ left,  1-top   ], [ right, 1-top    ] ) );
-        }
-      if( !this.existing )
-        { this.copy_onto_graphics_card( context );
-          this.existing = true;
-        }
-      else
-        this.copy_onto_graphics_card( context, ["texture_coord"], false );
+//           this.arrays.texture_coord.push( ...Vec.cast( [ left,  1-bottom], [ right, 1-bottom ],
+//                                                        [ left,  1-top   ], [ right, 1-top    ] ) );
+//         }
+//       if( !this.existing )
+//         { this.copy_onto_graphics_card( context );
+//           this.existing = true;
+//         }
+//       else
+//         this.copy_onto_graphics_card( context, ["texture_coord"], false );
 
-    }
-}
+//     }
+// }
 
 
 const Main_Scene =
@@ -191,9 +192,11 @@ class Solar_System extends Scene
 
 
                      'teapot': new Shape_From_File( "assets/dpv.obj" ),
+                       'bed': new Shape_From_File( "assets/BED.obj" ),
 
-                     'TV': new defs.Cube() ,
-                     'te': new Text_Line(35)
+                     'TV':  new Shape_From_File( "assets/monitor.obj" ),
+                    'Tund':  new Shape_From_File( "assets/TVtable.obj" )
+                     //'text': new Text_Line(35)
                       };
 
 
@@ -213,7 +216,7 @@ class Solar_System extends Scene
                                                         // coordinates in place.  Multiply them all by 5.
       // this.shapes.ball_repeat.arrays.texture_coord.forEach( coord => coord
        this.shapes.square1.arrays.texture_coord.forEach( coord => coord.scale(3));
-
+     this.shapes.ball_4.arrays.texture_coord.forEach( coord => coord.scale(5));
       const phong    = new defs.Phong_Shader( 1 );
       this.solid     = new Material( phong, { diffusivity: .5, smoothness: 800, color: Color.of(1,1,1,1) } );// .7,.8,.6,1 
                                                               // *** Shaders ***
@@ -233,8 +236,16 @@ class Solar_System extends Scene
       const black_hole_shader = new Black_Hole_Shader();
       const sun_shader        = new Sun_Shader();
       
-                                              // *** Materials: *** wrap a dictionary of "options" for a shader.
+       
 
+                                              // *** Materials: *** wrap a dictionary of "options" for a shader.
+        const phong2   = new defs.Phong_Shader();
+      const texture = new defs.Textured_Phong( 1 );
+      this.grey       = new Material( phong2, { color: Color.of( .5,.5,.5,1 ), ambient: 0, 
+                                        diffusivity: .3, specularity: .5, smoothness: 10 })
+
+    //   this.text_image = new Material( texture, { ambient: 1, diffusivity: 0, specularity: 0,
+     //                                            texture: new Texture( "assets/text.png" ) });
                                               // TODO (#2):  Complete this list with any additional materials you need:
 
       this.materials = { plastic: new Material( phong_shader, 
@@ -282,7 +293,13 @@ class Solar_System extends Scene
                       grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
-              ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
+                          ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
+              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
+                          ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
+               bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
+                        ambient: 0.5, diffusivity: 1, specularity: 0 } ),//, color: Color.of( 0,0,0,1 )
+                 text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
+                                                 texture: new Texture( "assets/TV.gif" ) })   
                        };
 /*
               car_bump: new Material( new defs.Fake_Bump_Map( 1 ), { color: Color.of( 0,0,0,1 ), 
@@ -413,7 +430,7 @@ class Solar_System extends Scene
 //  this.shapes.tri.draw( context, program_state, model_transform.times( Mat4.scale([ 60,60,60 ]) )
    //                                    .times( Mat4.rotation( 90, Vec.of( 1,0,0 ) ) ),
   //                           this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
-  //this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([60,60,40])), this.materials. HouW);
+  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([200,200,200])), this.materials.sky_texture);
 //floor
 this.shapes.square.draw( context, program_state, Mat4.translation([ 0,0,-39.9  ]).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
@@ -484,7 +501,72 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ]
                                this.materials.grass);
 
 //computer, key_board,mouse
+this.shapes.TV.draw( context, program_state, Mat4.translation([ -33,-50,-15  ]).times( Mat4.scale([ 10,10,10]) )
+          .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));  
 
+
+if(this.lights_on){
+//  const t1 = program_state.animation_time/1000;
+//  while(t1<100){
+  this.shapes.square.draw( context, program_state, Mat4.translation([ -33,-49.5,-13  ]).times( Mat4.scale([ 11.5,15,6]) )
+          .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials.text_image);//}
+}else{
+  this.shapes.square.draw( context, program_state, Mat4.translation([ -33,-49.5,-13  ]).times( Mat4.scale([ 11.5,15,6]) )
+          .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials.metal);  
+}
+
+
+
+//const t1 = program_state.animation_time/1000;
+  //    const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
+     // this.shapes.box.draw( context, program_state,  model_transform, this.grey );
+      
+
+// program_state.lights = [ new Light( Vec.of( 3,2,1,0 ),   Color.of( 1,1,1,1 ),  1000000 ),
+//                                new Light( Vec.of( 3,10,10,1 ), Color.of( 1,.7,.7,1 ), 100000 ) ];
+//       if( !context.scratchpad.controls ) 
+//         { program_state.set_camera( Mat4.look_at( ...Vec.cast( [ 0,0,4 ], [0,0,0], [0,1,0] ) ) );
+//           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 500 );
+//         }
+//      // const t1 = program_state.animation_time/1000;
+//      // const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
+//       this.shapes.box.draw( context, program_state,model_transform , this.grey );
+      
+      
+//       let strings = [ "This is some text", "More text", "1234567890", "This is a line.\n\n\n"+"This is another line.", 
+//                       Text_Line.toString(), Text_Line.toString() ];
+      
+//                         // Sample the "strings" array and draw them onto a cube.
+//       for( let i = 0; i < 3; i++ )                    
+//         for( let j = 0; j < 2; j++ )
+//         {             // Find the matrix for a basis located along one of the cube's sides:
+//           let cube_side = Mat4.rotation( i == 0 ? Math.PI/2 : 0, Vec.of(1, 0, 0) )
+//                   .times( Mat4.rotation( Math.PI * j - ( i == 1 ? Math.PI/2 : 0 ), Vec.of( 0, 1, 0 ) ) )
+//                   .times( Mat4.translation([ -.9, .9, 1.01 ]) );
+
+//           const multi_line_string = strings[ 2*i + j ].split('\n');
+//                         // Draw a Text_String for every line in our string, up to 30 lines:
+//           for( let line of multi_line_string.slice( 0,30 ) )
+//           {             // Assign the string to Text_String, and then draw it.
+//             this.shapes.text.set_string( line, context.context);
+//             this.shapes.text.draw( context, program_state, model_transform.times( cube_side )
+//                                                  .times( Mat4.scale([ .03,.03,.03 ])), this.text_image );
+//                         // Move our basis down a line.
+//             cube_side.post_multiply( Mat4.translation([ 0,-.06,0 ]) );
+//           }
+//         } 
+                           
+//Tund
+this.shapes.Tund.draw( context, program_state, Mat4.translation([ -10,-46,-35  ]).times( Mat4.scale([ 20,10,10]) )
+          .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),  
+                             this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));
+ //bed   
+this.shapes.bed.draw( context, program_state, Mat4.translation([ -39,47,-32  ]).times( Mat4.scale([ 20,20,20 ]) )
+                                            .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
+                               this.materials.bed_texture);   //.override(Color.of(0.5,1,1,1))
 
 
 
