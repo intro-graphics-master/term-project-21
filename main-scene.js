@@ -154,7 +154,8 @@ class Solar_System extends Scene
     {                                                // display():  Called once per frame of animation.  For each shape that you want to
                                                      // appear onscreen, place a .draw() call for it inside.  Each time, pass in a
                                                      // different matrix value to control where the shape appears.
-     
+     //context.getExtension( "GL_OES_standard_derivatives" );
+     context.context.getExtension('OES_standard_derivatives');
                            // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
       if( !context.scratchpad.controls ) 
         {                       // Add a movement controls panel to the page:
@@ -772,7 +773,7 @@ varying vec2 vUv;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
-uniform vec3 color;
+uniform vec4 color;
 uniform float time;
 uniform float twinkleSpeed;
 uniform float speed;
@@ -826,7 +827,8 @@ void main( void ) {
  
     // Motion blur; increases temporal coherence of undersampled flickering stars
     // and provides temporal filtering under true motion.  
-    gl_FragColor = vec4( starColor * color, 1.0 );
+    gl_FragColor = vec4( starColor, 1.0 );
+    gl_FragColor *= color;
 }
 
 
