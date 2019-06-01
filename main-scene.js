@@ -435,7 +435,7 @@ this.shapes.square.draw( context, program_state, Mat4.translation([ 0,-20,-40  ]
     
      let car_model = Mat4.identity();
      //car                               
-this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([22, 22, 22])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([4,0,0]))),this.materials.car_texture); 
+this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
     
      
     // this.shapes.teapot.draw( context, program_state, model_transform,this.materials.plastic_stars);                        
