@@ -17,7 +17,7 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
 
 // (Can define Main_Scene's class here)
-
+var i = 1;
 export class Shape_From_File extends Shape
 {                                   // **Shape_From_File** is a versatile standalone Shape that imports
                                     // all its arrays' data from an .obj 3D model file.
@@ -295,7 +295,14 @@ class Solar_System extends Scene
                       grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
-                          ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
+                  ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
+              car_texture2: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_2.png" ),
+                ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
+              car_texture3: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_3.png" ),
+                ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
+              car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
+                 ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
+
               sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
                bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
@@ -304,6 +311,7 @@ class Solar_System extends Scene
                         ambient:1, diffusivity: 1, specularity: 0 } ),
                  text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
                                                  texture: new Texture( "assets/TV.gif" ) })   
+
                        };
 /*
               car_bump: new Material( new defs.Fake_Bump_Map( 1 ), { color: Color.of( 0,0,0,1 ), 
@@ -605,11 +613,37 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
  
 
     
+
      let car_model =model_transform .times(Mat4.scale([0.3,0.3,0.3,1])); //Mat4.identity();
      //car                               
-this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40])),this.materials.car_texture); 
+//this.shapes.teapot.draw( context, program_state, 
+      
+      //////car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
+      
+      
+      //,this.materials.car_texture); 
     
+
+     if(i<=3){                               
+        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
+        //i = i
+     }
+
+     if(7>=i&i>=4){                               
+        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture2); 
      
+     }
+     if(11>=i&i>=8){
+       this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture3); 
+     }
+     if(i>=12){
+       this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture4); 
+     }
+    if(i>=16){
+      i = i - 16;
+    }
+    i++;
+    
     // this.shapes.teapot.draw( context, program_state, model_transform,this.materials.plastic_stars);                        
        
      
