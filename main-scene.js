@@ -593,8 +593,8 @@ this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15,
      this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
     
     //arms
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,-0.3,0])).times(Mat4.scale([0.1, 0.3, 0.1])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,-0.3,0])).times(Mat4.scale([0.3, 0.1, 0.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
                                                  
            //.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 )))                                     
 
