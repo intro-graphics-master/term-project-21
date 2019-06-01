@@ -197,7 +197,7 @@ class Solar_System extends Scene
                       };
 
 
-                      };
+
 
 //
 
