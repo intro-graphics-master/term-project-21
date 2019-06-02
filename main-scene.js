@@ -19,6 +19,10 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
 var i = 1;
 
 //
+function scaleVector(vec,scale){
+  var result = [vec[0]*scale,vec[1]*scale,vec[2]*scale];
+  return result;
+}
 function distance2Coords(coord_1,coord_2){
   /*
   if(coord_1[0][3]=0){
@@ -40,7 +44,9 @@ function distance2Coords(coord_1,coord_2){
 };
 
 function twoCoords_vector(coord_1,coord_2){
-  var vectorPoint1to2 = [coord_2[0][0]-coord_1[0][0],coord_2[1][1]-coord_1[1][1],coord_2[2][2]-coord_1[2][2]];
+  var vectorPoint1to2 = [coord_2[0][0]*coord_2[0][3]-coord_1[0][0]*coord_1[0][3],
+  coord_2[1][1]*coord_2[1][3]-coord_1[1][1]*coord_1[1][3],
+  coord_2[2][2]*coord_2[2][3]-coord_1[2][2]*coord_1[2][3]];
   return vectorPoint1to2;
 
 }
@@ -324,7 +330,7 @@ class Car_Control extends Scene
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
                       fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
-                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/ground_2.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
                   ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
@@ -357,10 +363,12 @@ class Car_Control extends Scene
       this.car_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
       this.fakecarP = this.carP = this.car_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0]));
       this.carP = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));
-                                     
+     // this.carTemp = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));                             
 //
       //let carP = 
-      
+      this.flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
+      this.flyball = this.flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,8,-1.5]));
+      //this.sounds = { fire: new Audio('assets/story.mp3' )};
       this.star_matrices = [];
       for( let i=0; i<30; i++ )
         this.star_matrices.push( Mat4.rotation( Math.PI/2 * (Math.random()-.5), Vec.of( 0,1,0 ) )
@@ -375,12 +383,21 @@ class Car_Control extends Scene
         //this.key_triggered_button() 
        //this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
        //this.key_triggered_button( "car_forward", [ "l" ],()=> this.lights_on = !this.lights_on );
-       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0])) );
-       this.key_triggered_button( "car_backward",     [ "k" ], () => this.carP = this.carP.times(Mat4.translation([0,0,0.1])), undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0])) );
-       this.key_triggered_button( "car_leftturn",     [ "j" ], () => this.carP = this.carP.times(Mat4.rotation(0.1, Vec.of( 0,1,0 ))), undefined,
+       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
+       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
+       
+       this.key_triggered_button( "car_backward",     [ "k" ], () => this.carP = this.carP.times(Mat4.translation([0,0,0.1])), 
+       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
+       
+       this.key_triggered_button( "car_leftturn",     [ "j" ], () => this.carP = this.carP.times(Mat4.rotation(0.1, Vec.of( 0,1,0 ))),
+        
+       undefined,
+       () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
+       
+        this.key_triggered_button( "car_rightturn",     [ "l" ], () => this.carP = this.carP.times(Mat4.rotation(-0.1, Vec.of( 0,1,0 ))),
+        undefined,
         () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
-        this.key_triggered_button( "car_rightturn",     [ "l" ], () => this.carP = this.carP.times(Mat4.rotation(-0.1, Vec.of( 0,1,0 ))), undefined,
-        () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
+       
        //this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0])) );
         //carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
 
@@ -688,22 +705,29 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
       
       //,this.materials.car_texture); 
       //ball
-      let flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
-      let flyball = flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,3,-1.5]));
-      //Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 ))
       
+      //Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 ))
+     
 
-      if(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),flyball)<75)
-      {
+      while(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball)<75)
+      { 
         
-        flyball=flyball.times(Mat4.translation([ 0,1,0 ]));
+        var scale = 0.001;
+        var vector = twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
+        this.flyball=this.flyball.times(Mat4.translation(scaleVector(vector,scale)));
+        
+
       }
 
       
       //
-      this.shapes.ball_4.draw(context, program_state, flyball,this.materials.plastic_stars);
-      console.log(this.carP,flyball);
-    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),flyball));
+      this.shapes.ball_4.draw(context, program_state, this.flyball,this.materials.plastic_stars);
+      console.log(this.carP,this.flyball);
+      
+    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
+    //console.log(twoCoords_vector());
+    console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
+    console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
     //draw car
      if(i<=3){                               
         this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
