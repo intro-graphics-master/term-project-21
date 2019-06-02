@@ -348,7 +348,8 @@ class Car_Control extends Scene
                 pillow_texture: new Material(texture_shader_2, { texture: new Texture( "assets/stars.png" ),
                         ambient:1, diffusivity: 1, specularity: 0 } ),
                  text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
-                                                 texture: new Texture( "assets/TV.gif" ) })   
+                                                 texture: new Texture( "assets/TV.gif" ) }),
+                 monalisa : new Material(texture_shader_2, {texture: new Texture("assets/mona.jpg"),ambient: 1, color: Color.of( 0,0,0,1 )})   
 
                        };
 /*
@@ -583,6 +584,16 @@ this.shapes.square.draw( context, program_state, model_transform.times(Mat4.tran
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.plastic.override(Color.of(0.7,0.5,1,1)));
 
+
+
+//pic
+this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([0,-59.8,0])).times( Mat4.scale([ 16,16 ,20 ]) )
+                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),//.times( Mat4.rotation( Math.PI/2, Vec.of( 0,0,1 ) ) ),
+                                this.materials.monalisa);
+
+//this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([59.1,0,0])).times(Mat4.scale(5,5,5)), this.materials.monalisa);
+
+
 //ceiling                                                              
 this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.5,1,1,1)));   
@@ -600,9 +611,12 @@ this.shapes.TV.draw( context, program_state,  model_transform.times(Mat4.transla
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));  
 
+if(( t>= 42 && t<42.2)|| ( t>= 42.4 && t<42.6) ||( t>= 42.8 && t<43) ||( t>= 44 && t<48) ){
+  this.lights_on = true;
+}else{this.lights_on = false;}
 
 if(this.lights_on){
-
+  
   this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ -35,-49.5,-15.7  ])).times( Mat4.scale([ 11.5,15,6]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.text_image);//}
@@ -618,19 +632,24 @@ if(this.lights_on){
 //door 
 
   let doorP=model_transform.times(Mat4.translation([60,-30,-25]));
-const t1 = program_state.animation_time/1000;
+//const t1 = program_state.animation_time/1000;
 
 let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
 //                                        .times(Mat4.translation([0,-10 ,0 ]))
 //                                        .times( Mat4.scale([ 0.1,10,15 ]) );
-if(t1<15 && t1>=0){
-this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation(t/15*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
+if(t<77 && t>=70){
+this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-70)/7*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
-else if(t1<=30 && t1>=15){
+ else if (t >= 77 && t < 83)
+ {
+   this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
+                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+ }
+else if(t<=90 && t>=83){
 this.shapes.box.draw( context, program_state, OPENDOOR
-                                       .times( Mat4.rotation((t)/15 * Math.PI/2, Vec.of( 0,0,1 ) ) )
+                                       .times( Mat4.rotation((t-76)/7 * Math.PI/2, Vec.of( 0,0,1 ) ) )
                                        .times(Mat4.translation([0,10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),
                                this.materials.plastic.override(Color.of(1,0,0,1)));
@@ -753,31 +772,272 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
        
      
       const modifier = this.lights_on ? { ambient: 0.7 } : { ambient: 0.0 };
- if (t < 100)
-  {
-    model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([0,-t/10,0]));
-  }
-  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
-  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
+      model_transform = model_transform.times(Mat4.translation([0,0,-25]));
+
+      let leftleg_model = model_transform;
+      let rightleg_model = model_transform;
+      let leftarm_model = model_transform;
+      let rightarm_model = model_transform;
+
+// if (t < 20)
+ //{
+   model_transform = model_transform.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([-9,8,1.6])).times(Mat4.rotation(Math.PI/2,[0,-1,0]));//.times(Mat4.rotation(Math.PI/2,[0,0,1]));
+   leftleg_model = model_transform.times(Mat4.rotation(Math.PI/8,[1,0,0]));
+   rightleg_model = model_transform.times(Mat4.rotation(Math.PI/8,[1,0,0]));
+   rightarm_model = model_transform;
+   leftarm_model = model_transform;
+ //}
+
+if (t >= 10 && t <14)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-(t-10),0])).times(Mat4.rotation(Math.PI/3*(t-10), [0,0,-1]));
+}
+else if (t >= 14)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-4,0])).times(Mat4.rotation(Math.PI/3*4,[0,0,-1]));  
+}
+
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 14 && t < 15)
+{
+  model_transform= model_transform.times(Mat4.translation([0,(t-14)*3,t-14])).times(Mat4.rotation(Math.PI/6*(t-14),[0,0,-1]));
+}
+else if (t >= 15)
+{
+  model_transform= model_transform.times(Mat4.translation([0,3,1])).times(Mat4.rotation(Math.PI/6, [0,0,-1]));
+}
+
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 15 && t < 15.7)
+{
+  model_transform = model_transform.times(Mat4.translation([0,t-15,0]));
+}
+else if (t >= 15.7)
+{
+  model_transform = model_transform.times(Mat4.translation([0,0.7,0]));
+}
+
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 17 && t < 22.1)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-(t-17)/3,0])).times(Mat4.rotation(Math.PI/6*(t-17)/1.7,[1,0,0]));
+}
+else if (t >= 22.1)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-1.7,0])).times(Mat4.rotation(Math.PI/2,[1,0,0]));
+}
+
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 25 && t < 28)
+{
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/6 * (t-25),[0,0,-1]));
+}
+else if (t >= 28)
+{
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/2,[0,0,-1]));
+}
+
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 30 && t < 40)
+{
+    model_transform = model_transform.times(Mat4.translation([0,-(t - 30),0]));
+    leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
+    rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));
+}
+else if (t >= 40)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-10,0]));
+leftleg_model = model_transform;
+rightleg_model = model_transform;
+}
+
+rightarm_model = model_transform;
+leftarm_model = model_transform;
+
+if (t >= 40 && t < 42)
+{
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/8*(t-40),[0,0,1]));  
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  rightarm_model = model_transform.times(Mat4.translation([0,-(t-40)/2.5,(t-40)/5])).times(Mat4.rotation(Math.PI/4*(t-40),[-1,0,0]));
+}
+else if (t >= 42)
+{
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/4,[0,0,1]));
+  rightarm_model = model_transform.times(Mat4.translation([0,-0.8,0.4])).times(Mat4.rotation(Math.PI/4*2,[-1,0,0]));
+
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+}
+
+leftarm_model = model_transform;
+
+// if (t >= 48 && t <50)
+// {
+//   rightarm_model = model_transform.times(Mat4.translation([0,(t-48)*0.2,(t-48)*0.4])).times(Mat4.rotation(Math.PI/4*(t-48),[1,0,0]));
+// }
+// else if (t >= 50)
+// {
+//   rightarm_model = rightarm_model.times(Mat4.translation([0,0.4,0.8]));//.times(Mat4.rotation(Math.PI/2,[1,0,0])).times(Mat4.translation([0,0,0]));
+// }
+
+
+if (t >= 50 && t < 52)
+{
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/4*(t-50),[0,0,1]));
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+leftarm_model = model_transform;
+rightarm_model = model_transform;//.times(Mat4.rotation(Math.PI/4*(t-50),[1,0,0]));
+}
+else if (t >= 52)
+{
+  //.times(Mat4.rotation(Math.PI/4*2,[0,0,0]));//.times(Mat4.translation([0,-0.8,0.4]));//;
+  model_transform = model_transform.times(Mat4.rotation(Math.PI/2,[0,0,1]));
+  rightarm_model = model_transform;//.times(Mat4.rotation(Math.PI/2,[1,0,0]));
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+leftarm_model = model_transform;
+
+}
+
+
+ 
+if (t >= 52 && t <= 54)
+{
+    model_transform = model_transform.times(Mat4.translation([0,-(t - 52),0]));
+    leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
+    rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));
+    leftarm_model = model_transform;
+rightarm_model = model_transform;
+
+}
+else if (t >= 54)
+{
+  model_transform = model_transform.times(Mat4.translation([0,-2,0]));
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+
+
+
+if (t >= 54 && t < 56)
+{
+    model_transform = model_transform.times(Mat4.rotation(Math.PI/8*(t-54),[0,0,-1]));
+    leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+else if (t >= 56)
+{
+    model_transform = model_transform.times(Mat4.rotation(Math.PI/4,[0,0,-1]));
+    leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+
+
+
+
+if (t >= 56 && t < 78.5)
+{
+    model_transform = model_transform.times(Mat4.translation([0,-(t - 56),0]));
+    leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
+    rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));
+leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+else if(t >= 78.5)
+{
+  model_transform = model_transform.times(Mat4.translation([0, -22.5, 0]));
+  leftleg_model = model_transform;
+  rightleg_model = model_transform;
+leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+
+
+if (t >= 80 && t < 82)
+{
+    model_transform = model_transform.times(Mat4.rotation(Math.PI/4*(t-80),[0,0,1]));
+    leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+else if (t >= 82)
+{
+    model_transform = model_transform.times(Mat4.rotation(Math.PI/2,[0,0,1]));
+    leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;
+}
+
+
+if (t >= 82 && t < 86)
+{
+model_transform = model_transform.times(Mat4.translation([0,-(t-82),0]));
+    leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
+    rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform; 
+}
+else if (t >= 86)
+{
+    model_transform = model_transform.times(Mat4.translation([0,-4,0]));
+    leftleg_model = model_transform;
+  rightleg_model = model_transform;
+  leftarm_model = model_transform;
+rightarm_model = model_transform;  
+}
+
+  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.scale([1.3,1.3,1.5])).times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
+  this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.scale([1.3,1.3,1.5])).times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
 
   // body
-     this.shapes.cylinder.draw(context, program_state, model_transform, this.materials.cake2);
-     this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,0.8])).times(Mat4.scale([0.7, 0.7, 0.7])), this.materials.cake1);
+     this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.scale([1.3,1.3,1.5])), this.materials.cake2);
+     this.shapes.cylinder.draw(context, program_state, model_transform.times(Mat4.translation([0,0,1.1])).times(Mat4.scale([0.7, 0.7, 0.9])), this.materials.cake1);
     
     //arms
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.translation([-1.1,0,0])).times(Mat4.scale([0.1, 0.1, 0.4])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, leftarm_model.times(Mat4.translation([1.45,0,-0.3])).times(Mat4.scale([0.15, 0.15, 1.1])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, rightarm_model.times(Mat4.translation([-1.45,0,-0.3])).times(Mat4.scale([0.15, 0.15, 1.1])), this.materials.arms); 
                                                  
            //.times(Mat4.rotation(1*angle*x, Vec.of( 0,-1,0 )))                                     
 
   //legs
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 ))).times(Mat4.translation([.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms); 
-     this.shapes.box.draw(context, program_state, model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 ))).times(Mat4.translation([-.4,0,-0.9])).times(Mat4.scale([0.1, 0.1, 0.8])), this.materials.arms);      
+     this.shapes.box.draw(context, program_state, leftleg_model.times(Mat4.translation([.4,0,-1.7])).times(Mat4.scale([0.15, 0.15, 1.3])), this.materials.arms); 
+     this.shapes.box.draw(context, program_state, rightleg_model.times(Mat4.translation([-.4,0,-1.7])).times(Mat4.scale([0.15, 0.15, 1.3])), this.materials.arms);      
                                                 
 
     //eyes
-     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([0.2,-0.7,0.8])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
-     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([-0.2,-0.7,0.8])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
+     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
+     this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([-0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
 
                             // new value based on our light switch.                         
       //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
