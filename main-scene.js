@@ -496,7 +496,7 @@ this.shapes.TV.draw( context, program_state,  model_transform.times(Mat4.transla
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));  
 
-if(( t>= 42 && t<42.2)|| ( t>= 42.4 && t<42.6) ||( t>= 42.8 && t<43) ||( t>= 44 && t<48) ){
+if(( t>= 37 && t<37.2)|| ( t>= 37.4 && t<37.6) ||( t>= 37.8 && t<38) ||( t>= 38 && t<43) ){
   this.lights_on = true;
 }else{this.lights_on = false;}
 
