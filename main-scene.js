@@ -12,12 +12,50 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
  } = defs;
 
 
-
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
 
 // (Can define Main_Scene's class here)
 var i = 1;
+
+//
+function scaleVector(vec,scale){
+  var result = [vec[0]*scale,vec[1]*scale,vec[2]*scale];
+  return result;
+}
+function distance2Coords(coord_1,coord_2){
+  /*
+  if(coord_1[0][3]=0){
+    coord_1[0][3]=1;
+  };
+  if(coord_1[1][3]=0){
+    coord_1[1][3]=1;
+  };
+  if(coord_1[2][3]=0){
+    coord_1[2][3]=1;
+  };
+*/
+
+
+  var distances = Math.sqrt(Math.pow(coord_1[0][0]*coord_1[0][3]-coord_2[0][0]*coord_2[0][3],2)
+  +Math.pow(coord_1[1][1]*coord_1[1][3]-coord_2[1][1]*coord_2[1][3],2)
+  +Math.pow(coord_1[2][2]*coord_1[2][3]-coord_2[2][2]*coord_2[2][3],2));
+  return distances;
+};
+
+function twoCoords_vector(coord_1,coord_2){
+  var vectorPoint1to2 = [coord_2[0][0]*coord_2[0][3]-coord_1[0][0]*coord_1[0][3],
+  coord_2[1][1]*coord_2[1][3]-coord_1[1][1]*coord_1[1][3],
+  coord_2[2][2]*coord_2[2][3]-coord_1[2][2]*coord_1[2][3]];
+  return vectorPoint1to2;
+
+}
+
+ function Arrays_sum(array1, array2) 
+{
+  var result = [array1[0]+array2[0],array1[1]+array2[1],array1[2]+array2[2],array1[3]+array2[3]];
+  return result;
+};
 export class Shape_From_File extends Shape
 {                                   // **Shape_From_File** is a versatile standalone Shape that imports
                                     // all its arrays' data from an .obj 3D model file.
@@ -159,7 +197,7 @@ export class Shape_From_File extends Shape
 
 
 const Main_Scene =
-class Solar_System extends Scene
+class Car_Control extends Scene
 {                                             // **Solar_System**:  Your Assingment's Scene.
   constructor()
     {                  // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
@@ -292,7 +330,7 @@ class Solar_System extends Scene
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
                       fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
-                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/ground_2.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
                   ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
@@ -303,7 +341,7 @@ class Solar_System extends Scene
               car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
                  ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
-              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
+              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/night.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
                bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
                         ambient: 0.5, diffusivity: 1, specularity: 0 } ),
@@ -322,6 +360,16 @@ class Solar_System extends Scene
                                   // Some setup code that tracks whether the "lights are on" (the stars), and also
                                   // stores 30 random location matrices for drawing stars behind the solar system:
       this.lights_on = false;
+      
+      this.car_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
+      this.fakecarP = this.carP = this.car_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0]));
+      this.carP = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));
+     // this.carTemp = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));                             
+//
+      //let carP = 
+      this.flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
+      this.flyball = this.flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,8,-1.5]));
+      //this.sounds = { fire: new Audio('assets/story.mp3' )};
       this.star_matrices = [];
       for( let i=0; i<30; i++ )
         this.star_matrices.push( Mat4.rotation( Math.PI/2 * (Math.random()-.5), Vec.of( 0,1,0 ) )
@@ -333,8 +381,27 @@ class Solar_System extends Scene
                                       // buttons with key bindings for affecting this scene, and live info readouts.
 
                                  // TODO (#5b): Add a button control.  Provide a callback that flips the boolean value of "this.lights_on".
-       // this.key_triggered_button() 
-       this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
+        //this.key_triggered_button() 
+       //this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
+       //this.key_triggered_button( "car_forward", [ "l" ],()=> this.lights_on = !this.lights_on );
+       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
+       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
+       
+       this.key_triggered_button( "car_backward",     [ "k" ], () => this.carP = this.carP.times(Mat4.translation([0,0,0.1])), 
+       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
+       
+       this.key_triggered_button( "car_leftturn",     [ "j" ], () => this.carP = this.carP.times(Mat4.rotation(0.1, Vec.of( 0,1,0 ))),
+        
+       undefined,
+       () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
+       
+        this.key_triggered_button( "car_rightturn",     [ "l" ], () => this.carP = this.carP.times(Mat4.rotation(-0.1, Vec.of( 0,1,0 ))),
+        undefined,
+        () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
+       
+       //this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0])) );
+        //carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
+
     }
   display( context, program_state )
     {                                                // display():  Called once per frame of animation.  For each shape that you want to
@@ -342,13 +409,16 @@ class Solar_System extends Scene
                                                      // different matrix value to control where the shape appears.
      
                            // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
+                           
       if( !context.scratchpad.controls ) 
         {                       // Add a movement controls panel to the page:
           this.children.push( context.scratchpad.controls = new defs.Movement_Controls() ); 
 
                                 // Add a helper scene / child scene that allows viewing each moving body up close.
           this.children.push( this.camera_teleporter = new Camera_Teleporter() );
-
+           
+          
+    
                     // Define the global camera and projection matrices, which are stored in program_state.  The camera
                     // matrix follows the usual format for transforms, but with opposite values (cameras exist as 
                     // inverted matrices).  The projection matrix follows an unusual format and determines how depth is 
@@ -359,7 +429,7 @@ class Solar_System extends Scene
           program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0,0,20 ) ) );
 
           this.initial_camera_location = program_state.camera_inverse;
-          program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
+          program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 1000 );
         }
 
                                                                       // Find how much time has passed in seconds; we can use
@@ -423,12 +493,23 @@ class Solar_System extends Scene
 
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
+  
+       
+       let temp = model_transform;
+       console.log(model_transform[0]);
+       temp[0] = Arrays_sum(model_transform[0],[1,0,0,0]);
+       temp[1] = Arrays_sum(model_transform[1],[0,1,0,0]);
+       //temp[0][0]
+       model_transform=Mat4.identity();
+
+       console.log(distance2Coords(temp,model_transform));
+       console.log(model_transform);
+       model_transform=Mat4.identity();
+       this.shapes.box.draw( context, program_state, temp.times(Mat4.scale([1,1,1])), this.materials.sky_texture);
+       
 
        
-       
-
-
-
+      
        
 
 
@@ -444,7 +525,7 @@ class Solar_System extends Scene
 //  this.shapes.tri.draw( context, program_state, model_transform.times( Mat4.scale([ 60,60,60 ]) )
    //                                    .times( Mat4.rotation( 90, Vec.of( 1,0,0 ) ) ),
   //                           this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
-  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([200,200,200])), this.materials.sky_texture);
+  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([1000,1000,1000])), this.materials.sky_texture);
 //floor
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([ 0,0,-39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
@@ -522,7 +603,7 @@ this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.tra
 //grass
 
 this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,-40  ]))
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 1000,1000,1 ]) ),
                                this.materials.grass);
 
 //computer, key_board,mouse
@@ -633,30 +714,55 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
 
     
 
+
      let car_model =model_transform .times(Mat4.scale([0.4,0.4,0.4,1])); //Mat4.identity();
      //car                               
 //this.shapes.teapot.draw( context, program_state, 
       
       let carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-63.5,0]))).times(Mat4.scale([40, 40, 40]))
+
       
       
       //,this.materials.car_texture); 
-    
+      //ball
+      
+      //Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 ))
+     
 
+      while(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball)<75)
+      { 
+        
+        var scale = 0.001;
+        var vector = twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
+        this.flyball=this.flyball.times(Mat4.translation(scaleVector(vector,scale)));
+        
+
+      }
+
+      
+      //
+      this.shapes.ball_4.draw(context, program_state, this.flyball,this.materials.plastic_stars);
+      console.log(this.carP,this.flyball);
+      
+    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
+    //console.log(twoCoords_vector());
+    console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
+    console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
+    //draw car
      if(i<=3){                               
-        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture); 
+        this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
         //i = i
      }
 
      if(7>=i&i>=4){                               
-        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture2); 
+        this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture2); 
      
      }
      if(11>=i&i>=8){
-       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture3); 
+       this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture3); 
      }
      if(i>=12){
-       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture4); 
+       this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture4); 
      }
     if(i>=16){
       i = i - 16;
