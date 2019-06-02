@@ -12,50 +12,12 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
  } = defs;
 
 
+
     // Now we have loaded everything in the files tiny-graphics.js, tiny-graphics-widgets.js, and assignment-4-resources.js.
     // This yielded "tiny", an object wrapping the stuff in the first two files, and "defs" for wrapping all the rest.
 
 // (Can define Main_Scene's class here)
 var i = 1;
-
-//
-function scaleVector(vec,scale){
-  var result = [vec[0]*scale,vec[1]*scale,vec[2]*scale];
-  return result;
-}
-function distance2Coords(coord_1,coord_2){
-  /*
-  if(coord_1[0][3]=0){
-    coord_1[0][3]=1;
-  };
-  if(coord_1[1][3]=0){
-    coord_1[1][3]=1;
-  };
-  if(coord_1[2][3]=0){
-    coord_1[2][3]=1;
-  };
-*/
-
-
-  var distances = Math.sqrt(Math.pow(coord_1[0][0]*coord_1[0][3]-coord_2[0][0]*coord_2[0][3],2)
-  +Math.pow(coord_1[1][1]*coord_1[1][3]-coord_2[1][1]*coord_2[1][3],2)
-  +Math.pow(coord_1[2][2]*coord_1[2][3]-coord_2[2][2]*coord_2[2][3],2));
-  return distances;
-};
-
-function twoCoords_vector(coord_1,coord_2){
-  var vectorPoint1to2 = [coord_2[0][0]*coord_2[0][3]-coord_1[0][0]*coord_1[0][3],
-  coord_2[1][1]*coord_2[1][3]-coord_1[1][1]*coord_1[1][3],
-  coord_2[2][2]*coord_2[2][3]-coord_1[2][2]*coord_1[2][3]];
-  return vectorPoint1to2;
-
-}
-
- function Arrays_sum(array1, array2) 
-{
-  var result = [array1[0]+array2[0],array1[1]+array2[1],array1[2]+array2[2],array1[3]+array2[3]];
-  return result;
-};
 export class Shape_From_File extends Shape
 {                                   // **Shape_From_File** is a versatile standalone Shape that imports
                                     // all its arrays' data from an .obj 3D model file.
@@ -148,56 +110,9 @@ export class Shape_From_File extends Shape
     }
 }
 
-// export class Text_Line extends Shape                
-// {                           // **Text_Line** embeds text in the 3D world, using a crude texture 
-//                             // method.  This Shape is made of a horizontal arrangement of quads.
-//                             // Each is textured over with images of ASCII characters, spelling 
-//                             // out a string.  Usage:  Instantiate the Shape with the desired
-//                             // character line width.  Then assign it a single-line string by calling
-//                             // set_string("your string") on it. Draw the shape on a material
-//                             // with full ambient weight, and text.png assigned as its texture 
-//                             // file.  For multi-line strings, repeat this process and draw with
-//                             // a different matrix.
-//   constructor( max_size )                           
-//     { super( "position", "normal", "texture_coord" );
-//       this.max_size = max_size;
-//       var object_transform = Mat4.identity();
-//       for( var i = 0; i < max_size; i++ )
-//       {                                       // Each quad is a separate Square instance:
-//         defs.Square.insert_transformed_copy_into( this, [], object_transform );
-//         object_transform.post_multiply( Mat4.translation([ 1.5,0,0 ]) );
-//       }
-//     }
-//   set_string( line, context )
-//     {           // set_string():  Call this to overwrite the texture coordinates buffer with new 
-//                 // values per quad, which enclose each of the string's characters.
-//       this.arrays.texture_coord = [];
-//       for( var i = 0; i < this.max_size; i++ )
-//         {
-//           var row = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) / 16 ),
-//               col = Math.floor( ( i < line.length ? line.charCodeAt( i ) : ' '.charCodeAt() ) % 16 );
-
-//           var skip = 3, size = 32, sizefloor = size - skip;
-//           var dim = size * 16,  
-//               left  = (col * size + skip) / dim,      top    = (row * size + skip) / dim,
-//               right = (col * size + sizefloor) / dim, bottom = (row * size + sizefloor + 5) / dim;
-
-//           this.arrays.texture_coord.push( ...Vec.cast( [ left,  1-bottom], [ right, 1-bottom ],
-//                                                        [ left,  1-top   ], [ right, 1-top    ] ) );
-//         }
-//       if( !this.existing )
-//         { this.copy_onto_graphics_card( context );
-//           this.existing = true;
-//         }
-//       else
-//         this.copy_onto_graphics_card( context, ["texture_coord"], false );
-
-//     }
-// }
-
 
 const Main_Scene =
-class Car_Control extends Scene
+class Solar_System extends Scene
 {                                             // **Solar_System**:  Your Assingment's Scene.
   constructor()
     {                  // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
@@ -213,7 +128,7 @@ class Car_Control extends Scene
       this.shapes = { 'box' : new Cube(),
                    'ball_4' : new Subdivision_Sphere( 4 ),
 
-                     'star' : new Planar_Star(), 
+             //        'star' : new Planar_Star(), 
                  'sphere1'  : new Subdivision_Sphere(1),
                  'cylinder' : new Capped_Cylinder(4,20),
                  'test' : new Windmill(3),
@@ -281,46 +196,18 @@ class Car_Control extends Scene
                                               // *** Materials: *** wrap a dictionary of "options" for a shader.
         const phong2   = new defs.Phong_Shader();
       const texture = new defs.Textured_Phong( 1 );
-      this.grey       = new Material( phong2, { color: Color.of( .5,.5,.5,1 ), ambient: 0, 
-                                        diffusivity: .3, specularity: .5, smoothness: 10 })
-
-    //   this.text_image = new Material( texture, { ambient: 1, diffusivity: 0, specularity: 0,
-     //                                            texture: new Texture( "assets/text.png" ) });
-                                              // TODO (#2):  Complete this list with any additional materials you need:
+                                  // TODO (#2):  Complete this list with any additional materials you need:
 
       this.materials = { plastic: new Material( phong_shader, 
                                     { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 1,0.5,1,1 ) } ),
-                         PLN1: new Material( phong_shader, 
-                                    { ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( 0.5,0.5,0.5,1 ) } ),
-                   plastic_stars: new Material( texture_shader_2,    
-                                    { texture: new Texture( "assets/stars.png" ),
-                                      ambient: 0, diffusivity: 1, specularity: 0, color: Color.of( .4,.4,.4,1 ) } ),
                            metal: new Material( phong_shader,
                                     { ambient: 0, diffusivity: 1, specularity: 1, color: Color.of( 1,.5,1,1 ) } ),
-                           PLN2: new Material( phong_shader,
-                                    { ambient: 0, diffusivity: 1, specularity: 1, color: Color.of( 0.2,0.2,0.2,1 ) } ),
-                     metal_earth: new Material( texture_shader_2,    
-                                    { texture: new Texture( "assets/earth.gif" ),
-                                      ambient: 0, diffusivity: 1, specularity: 1, color: Color.of( .5,.5,.5,1 ) } ),
-                                   //b.jpg
-                      PLN4: new Material( texture_shader_2,    
-                                    { texture: new Texture( "assets/bricks.png","NEAREST" ),
-                                      ambient: 0, diffusivity: 1, specularity: 1, smoothness:10 } ), 
-
-                       HouU: new Material( texture_shader_2,    
-                                    { ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.65,0.2,0.2,1) } ),
-                        HouW: new Material( texture_shader_2,    
-                                    {  texture: new Texture( "assets/bricks.png" ),
+                         HouW: new Material( texture_shader_2,    
+                                    {  texture: new Texture( "assets/b.png" ),
                                       ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.2,0.2,0.5,1) } ),
                         HouW1: new Material( texture_shader_2,    
-                                    {  texture: new Texture( "assets/bricks1.png" ),
+                                    {  texture: new Texture( "assets/br1.png" ),
                                       ambient: 1, diffusivity: 0, specularity: 1,  color: Color.of(0.2,0.2,0.5,1) } ),
-                      moon2:  new Material(  gouraud_shader,
-                                   {ambient: 0, diffusivity: 1, specularity: 0.5, color: Color.of( 1,1,1,1 )}),
-
-                      star: new Material(  texture_shader_2,
-                                  {texture: new Texture( "assets/star_face.png" ) ,
-                                    ambient:1,diffusivity: 0, specularity: 0} ),
 
                       black_hole: new Material( black_hole_shader ),
 
@@ -330,7 +217,7 @@ class Car_Control extends Scene
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
                       fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
-                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/ground_2.jpg" ),
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
                   ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
@@ -341,7 +228,7 @@ class Car_Control extends Scene
               car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
                  ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
-              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/night.jpg" ),
+              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
                bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
                         ambient: 0.5, diffusivity: 1, specularity: 0 } ),
@@ -360,16 +247,7 @@ class Car_Control extends Scene
                                   // Some setup code that tracks whether the "lights are on" (the stars), and also
                                   // stores 30 random location matrices for drawing stars behind the solar system:
       this.lights_on = false;
-      
-      this.car_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
-      this.fakecarP = this.carP = this.car_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0]));
-      this.carP = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));
-     // this.carTemp = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));                             
-//
-      //let carP = 
-      this.flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
-      this.flyball = this.flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,8,-1.5]));
-      //this.sounds = { fire: new Audio('assets/story.mp3' )};
+      this.perspective= false;
       this.star_matrices = [];
       for( let i=0; i<30; i++ )
         this.star_matrices.push( Mat4.rotation( Math.PI/2 * (Math.random()-.5), Vec.of( 0,1,0 ) )
@@ -381,44 +259,23 @@ class Car_Control extends Scene
                                       // buttons with key bindings for affecting this scene, and live info readouts.
 
                                  // TODO (#5b): Add a button control.  Provide a callback that flips the boolean value of "this.lights_on".
-        //this.key_triggered_button() 
-       //this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
-       //this.key_triggered_button( "car_forward", [ "l" ],()=> this.lights_on = !this.lights_on );
-       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
-       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
-       
-       this.key_triggered_button( "car_backward",     [ "k" ], () => this.carP = this.carP.times(Mat4.translation([0,0,0.1])), 
-       undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
-       
-       this.key_triggered_button( "car_leftturn",     [ "j" ], () => this.carP = this.carP.times(Mat4.rotation(0.1, Vec.of( 0,1,0 ))),
-        
-       undefined,
-       () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
-       
-        this.key_triggered_button( "car_rightturn",     [ "l" ], () => this.carP = this.carP.times(Mat4.rotation(-0.1, Vec.of( 0,1,0 ))),
-        undefined,
-        () => this.carP = this.carP.times(Mat4.rotation(0, Vec.of( 0,1,0 ))));
-       
-       //this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0])) );
-        //carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
-
+       // this.key_triggered_button() 
+       this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
+        this.key_triggered_button( "first/third", [ "f" ],()=>  this.perspective= !this.perspective );
     }
   display( context, program_state )
     {                                                // display():  Called once per frame of animation.  For each shape that you want to
                                                      // appear onscreen, place a .draw() call for it inside.  Each time, pass in a
                                                      // different matrix value to control where the shape appears.
-     
+      const t = program_state.animation_time / 1000;
                            // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
-                           
       if( !context.scratchpad.controls ) 
         {                       // Add a movement controls panel to the page:
           this.children.push( context.scratchpad.controls = new defs.Movement_Controls() ); 
 
                                 // Add a helper scene / child scene that allows viewing each moving body up close.
           this.children.push( this.camera_teleporter = new Camera_Teleporter() );
-           
-          
-    
+
                     // Define the global camera and projection matrices, which are stored in program_state.  The camera
                     // matrix follows the usual format for transforms, but with opposite values (cameras exist as 
                     // inverted matrices).  The projection matrix follows an unusual format and determines how depth is 
@@ -426,7 +283,7 @@ class Car_Control extends Scene
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
 
-          program_state.set_camera( Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0,0,20 ) ) );
+          program_state.set_camera( Mat4.look_at( Vec.of( -13,10,10 ), Vec.of( -13,10,5 ), Vec.of( -13, 1,1 ) ) );
 
           this.initial_camera_location = program_state.camera_inverse;
           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 1000 );
@@ -434,11 +291,77 @@ class Car_Control extends Scene
 
                                                                       // Find how much time has passed in seconds; we can use
                                                                       // time as an input when calculating new transforms:
-      const t = program_state.animation_time / 1000;
+     
 
                                                   // Have to reset this for each frame:
       this.camera_teleporter.cameras = [];
-      this.camera_teleporter.cameras.push( Mat4.look_at( Vec.of( 1,0,0 ), Vec.of( 0,1,0 ), Vec.of( 0,0,1 ) ) );
+
+      if(t>=9 && t<9.1){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.1&& t<9.2 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=9.2 && t<9.3){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.3&& t<9.4 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.4 && t<9.5){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.5&& t<9.6 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=9.6 && t<9.7){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.7&& t<9.8 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=9.8 && t<9.9){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=9.9&& t<10 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+
+      if(t>=8 && t<8.1){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.1&& t<8.2 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=8.2 && t<8.3){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.3&& t<8.4 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.4 && t<8.5){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.5&& t<8.6 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=8.6 && t<8.7){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.7&& t<8.8 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+       if(t>=8.8 && t<8.9){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      if(t>=8.9&& t<9 ){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10+t/5,10 ), Vec.of( -13,10+t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
+      
+
+      if(t<13 && t>10){
+      this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
+      }
 
 
                                              // Variables that are in scope for you to use:
@@ -463,12 +386,7 @@ class Car_Control extends Scene
 
       const blue = Color.of( 0,0,.5,1 ), yellow = Color.of( .5,.5,0,1 ), canclecy = Color.of( .3,.7,0,1 );
 
-                                    // Variable model_transform will be a local matrix value that helps us position shapes.
-                                    // It starts over as the identity every single frame - coordinate axes at the origin.
-      
-                                                  // TODO (#3b):  Use the time-varying value of sun_size to create a scale matrix 
-                                                  // for the sun. Also use it to create a color that turns redder as sun_size
-                                                  // increases, and bluer as it decreases.
+
       const smoothly_varying_ratio = .5 + .5 * Math.sin( 2 * Math.PI * t/10 ),
             sun_size = 1 + 2 * smoothly_varying_ratio,
             sun = model_transform.times( Mat4.scale([sun_size,sun_size,sun_size]));//undefined,
@@ -476,40 +394,20 @@ class Car_Control extends Scene
 
 
       this.materials.fire.color = Color.of( 1,0,0,1 ) ;  
-           // Assign our current sun color to the existing sun material.          
 
-                                                // *** Lights: *** Values of vector or point lights.  They'll be consulted by 
-                                                // the shader when coloring shapes.  See Light's class definition for inputs.
 
-                                                // TODO (#3c):  Replace with a point light located at the origin, with the sun's color
-                                                // (created above).  For the third argument pass in the point light's size.  Use
-                                                // 10 to the power of sun_size.
-
-      //const t = this.t = program_state.animation_time/1000;
-      //const angle = Math.sin( t );
       const light_position = Mat4.rotation( 360, [ 0,0,10 ] ).times( Vec.of( 1,1,1,0 ) );
       program_state.lights = [ new Light( light_position, Color.of( 1,1,1,1 ), 100000000 ) ];
 
 
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
-  
-       
-       let temp = model_transform;
-       console.log(model_transform[0]);
-       temp[0] = Arrays_sum(model_transform[0],[1,0,0,0]);
-       temp[1] = Arrays_sum(model_transform[1],[0,1,0,0]);
-       //temp[0][0]
-       model_transform=Mat4.identity();
-
-       console.log(distance2Coords(temp,model_transform));
-       console.log(model_transform);
-       model_transform=Mat4.identity();
-       this.shapes.box.draw( context, program_state, temp.times(Mat4.scale([1,1,1])), this.materials.sky_texture);
-       
 
        
-      
+       
+
+
+
        
 
 
@@ -517,15 +415,8 @@ class Car_Control extends Scene
 
         model_transform = Mat4.identity();
         model_transform =model_transform .times(Mat4.scale([0.3,0.3,0.3,1]));
-     //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
-   // this.shapes.bullet.draw( context, program_state, model_transform, this.solid.override(yellow) );
 
- // this.shapes.houseup.draw( context, program_state, model_transform.times(Mat4.translation([0,0,48])).times(Mat4.scale([100,100,30])), this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));//.override(Color.of(1,0,0,1)) );
-  
-//  this.shapes.tri.draw( context, program_state, model_transform.times( Mat4.scale([ 60,60,60 ]) )
-   //                                    .times( Mat4.rotation( 90, Vec.of( 1,0,0 ) ) ),
-  //                           this.materials.plastic.override(Color.of(0.65,0.2,0.2,1)));
-  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([1000,1000,1000])), this.materials.sky_texture);
+  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([200,200,200])), this.materials.sky_texture);
 //floor
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([ 0,0,-39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
@@ -552,12 +443,6 @@ this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.tra
                                this.materials. HouW);   
 
 
-// this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([59.9,0,0])).times( Mat4.scale([ 60,60,40 ]) )
-//                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
-//                                this.materials.plastic.override(Color.of(1,0.8,1,1))); 
-//this.shapes.square1.draw( context, program_state, model_transform.times(Mat4.translation([60,0,0])).times( Mat4.scale([ 60,60,40 ]) )
-//                                       .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
-//                               this.materials. HouW);   
 //windows and door
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([60,0,35])).times( Mat4.scale([ 0,60,5 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
@@ -603,7 +488,7 @@ this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.tra
 //grass
 
 this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,-40  ]))
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 1000,1000,1 ]) ),
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
                                this.materials.grass);
 
 //computer, key_board,mouse
@@ -611,7 +496,7 @@ this.shapes.TV.draw( context, program_state,  model_transform.times(Mat4.transla
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
                                this.materials.metal.override(Color.of(0.2,0.2,0.2,1)));  
 
-if(( t>= 42 && t<42.2)|| ( t>= 42.4 && t<42.6) ||( t>= 42.8 && t<43) ||( t>= 44 && t<48) ){
+if(( t>= 37 && t<37.2)|| ( t>= 37.4 && t<37.6) ||( t>= 37.8 && t<38) ||( t>= 38 && t<43) ){
   this.lights_on = true;
 }else{this.lights_on = false;}
 
@@ -626,8 +511,6 @@ if(this.lights_on){
                                this.materials.metal);  
 }
 
-//  const t1 = program_state.animation_time/1000;
-//  while(t1<100){
 
 //door 
 
@@ -657,45 +540,7 @@ this.shapes.box.draw( context, program_state, OPENDOOR
 else{this.shapes.box.draw( context, program_state, doorP.times( Mat4.rotation( Math.PI, Vec.of( 0,1,0 ) ) ).times( Mat4.scale([ 0.1,10,15 ]) ),
                                this.materials.plastic.override(Color.of(1,0,0,1)));}
 
-//const t1 = program_state.animation_time/1000;
-  //    const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
-     // this.shapes.box.draw( context, program_state,  model_transform, this.grey );
-      
-
-// program_state.lights = [ new Light( Vec.of( 3,2,1,0 ),   Color.of( 1,1,1,1 ),  1000000 ),
-//                                new Light( Vec.of( 3,10,10,1 ), Color.of( 1,.7,.7,1 ), 100000 ) ];
-//       if( !context.scratchpad.controls ) 
-//         { program_state.set_camera( Mat4.look_at( ...Vec.cast( [ 0,0,4 ], [0,0,0], [0,1,0] ) ) );
-//           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 500 );
-//         }
-//      // const t1 = program_state.animation_time/1000;
-//      // const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
-//       this.shapes.box.draw( context, program_state,model_transform , this.grey );
-      
-      
-//       let strings = [ "This is some text", "More text", "1234567890", "This is a line.\n\n\n"+"This is another line.", 
-//                       Text_Line.toString(), Text_Line.toString() ];
-      
-//                         // Sample the "strings" array and draw them onto a cube.
-//       for( let i = 0; i < 3; i++ )                    
-//         for( let j = 0; j < 2; j++ )
-//         {             // Find the matrix for a basis located along one of the cube's sides:
-//           let cube_side = Mat4.rotation( i == 0 ? Math.PI/2 : 0, Vec.of(1, 0, 0) )
-//                   .times( Mat4.rotation( Math.PI * j - ( i == 1 ? Math.PI/2 : 0 ), Vec.of( 0, 1, 0 ) ) )
-//                   .times( Mat4.translation([ -.9, .9, 1.01 ]) );
-
-//           const multi_line_string = strings[ 2*i + j ].split('\n');
-//                         // Draw a Text_String for every line in our string, up to 30 lines:
-//           for( let line of multi_line_string.slice( 0,30 ) )
-//           {             // Assign the string to Text_String, and then draw it.
-//             this.shapes.text.set_string( line, context.context);
-//             this.shapes.text.draw( context, program_state, model_transform.times( cube_side )
-//                                                  .times( Mat4.scale([ .03,.03,.03 ])), this.text_image );
-//                         // Move our basis down a line.
-//             cube_side.post_multiply( Mat4.translation([ 0,-.06,0 ]) );
-//           }
-//         } 
-                           
+       
 //Tund
 this.shapes.Tund.draw( context, program_state, model_transform.times( Mat4.translation([ -10,-46,-35  ])).times( Mat4.scale([ 20,10,10]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),  
@@ -709,60 +554,41 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
                                             .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.pillow_texture);  
 
-
+// //cameras
+// let eyeloc= model_transform.times(Mat4.translation([0,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1]));
+// if(t>=14 && t<78){
+// this.camera_teleporter.cameras.push( 
+//           Mat4.inverse(eyeloc.times( Mat4.translation([ 0,0,5 ])))
+//                      );
+// }
  
 
     
-
 
      let car_model =model_transform .times(Mat4.scale([0.4,0.4,0.4,1])); //Mat4.identity();
      //car                               
 //this.shapes.teapot.draw( context, program_state, 
       
       let carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-63.5,0]))).times(Mat4.scale([40, 40, 40]))
-
       
       
       //,this.materials.car_texture); 
-      //ball
-      
-      //Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 ))
-     
+    
 
-      while(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball)<75)
-      { 
-        
-        var scale = 0.001;
-        var vector = twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
-        this.flyball=this.flyball.times(Mat4.translation(scaleVector(vector,scale)));
-        
-
-      }
-
-      
-      //
-      this.shapes.ball_4.draw(context, program_state, this.flyball,this.materials.plastic_stars);
-      console.log(this.carP,this.flyball);
-      
-    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
-    //console.log(twoCoords_vector());
-    console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
-    console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
-    //draw car
      if(i<=3){                               
-        this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
+        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture); 
         //i = i
      }
 
      if(7>=i&i>=4){                               
-        this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture2); 
+        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture2); 
      
      }
      if(11>=i&i>=8){
-       this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture3); 
+       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture3); 
      }
      if(i>=12){
-       this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture4); 
+       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture4); 
      }
     if(i>=16){
       i = i - 16;
@@ -807,6 +633,7 @@ leftarm_model = model_transform;
 if (t >= 14 && t < 15)
 {
   model_transform= model_transform.times(Mat4.translation([0,(t-14)*3,t-14])).times(Mat4.rotation(Math.PI/6*(t-14),[0,0,-1]));
+
 }
 else if (t >= 15)
 {
@@ -850,7 +677,9 @@ rightarm_model = model_transform;
 leftarm_model = model_transform;
 
 
+
 //turning
+
 if (t >= 25 && t < 28)
 {
   model_transform = model_transform.times(Mat4.rotation(Math.PI/6 * (t-25),[0,0,-1]));
@@ -1070,8 +899,67 @@ rightarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.
                             // new value based on our light switch.                         
       //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
       
+  let eyeloc= model_transform.times(Mat4.translation([0,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1]));
+
+//   if(t>=14 && t<78 ){
+//     program_state.set_camera(Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0, 0,20 ) ) );
+//     this.initial_camera_location = program_state.camera_inverse;
+//           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
+//     this.camera_teleporter.cameras.push( 
+//           Mat4.inverse(eyeloc.times( Mat4.translation([ 0,0,2 ])).times(Mat4.rotation(Math.PI,Vec.of([0,0,1])))
+//           )                 
+//    )};
 
 
+
+eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/2,[1,0,0])).times( Mat4.translation([ 0,0,-2  ]));//.times(Mat4.rotation(Math.PI/2,Vec.of([0,0,1])));
+  //Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0, 0,20 ) ) );}
+  if(t>=14 && t < 33 ){   //}&& t<78){
+
+  this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc )
+                     );
+  }
+  if(t>=33 && t<  60 ){   //}&& t<78){
+
+  this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/6,[-1,0,0])).times( Mat4.translation([ 0,7,30  ]) ))
+                     );
+  }
+  if(t>=60 && t< 65  ){   //}&& t<78){
+
+  this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc)
+                     );
+  }
+  
+ if(t>=65 && t< 70  ){   //}&& t<78){
+
+  this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/10,[1,0,0])))
+                     );
+  }
+
+   if(t>=70 && t< 89  ){   //}&& t<78){
+
+  this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+                     );
+  }
+
+
+
+ if(t>90){
+   if(!this.perspective ){ 
+       this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+                     );
+    }else{ 
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc).times( Mat4.translation([ 0,0,1  ])));
+    }
+ }
+
+//this.camera_teleporter.cameras.push( Mat4.inverse( model_transform.times( Mat4.translation([ 0,0,5 ])))); 
 
 //candlefire      
       //model_transform = Mat4.identity();
@@ -1144,7 +1032,7 @@ class Camera_Teleporter extends Scene
   display( context, program_state )
   {
     const desired_camera = this.cameras[ this.selection ];
-    if( !desired_camera || !this.enabled )
+    if( !desired_camera )//|| !this.enabled )
       return;
     const dt = program_state.animation_delta_time;
     program_state.set_camera( desired_camera.map( (x,i) => Vec.from( program_state.camera_inverse[i] ).mix( x, .01*dt ) ) );    
