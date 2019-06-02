@@ -557,18 +557,18 @@ let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
 //                                        .times(Mat4.translation([0,-10 ,0 ]))
 //                                        .times( Mat4.scale([ 0.1,10,15 ]) );
-if(t<70 && t>=63){
-this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-63)/7*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
+if(t<66 && t>=62){
+this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-62)/4*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
- else if (t >= 70 && t < 77)
+ else if (t >= 66 && t < 70)
  {
    this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
-else if(t<=84 && t>=77){
+else if(t<=74 && t>=70){
 this.shapes.box.draw( context, program_state, OPENDOOR
-                                       .times( Mat4.rotation((t-77)/7 * Math.PI/2, Vec.of( 0,0,1 ) ) )
+                                       .times( Mat4.rotation((t-70)/4 * Math.PI/2, Vec.of( 0,0,1 ) ) )
                                        .times(Mat4.translation([0,10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),
                                this.materials.plastic.override(Color.of(1,0,0,1)));
