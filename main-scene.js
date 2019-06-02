@@ -20,8 +20,22 @@ var i = 1;
 
 //
 function distance2Coords(coord_1,coord_2){
-  var distances = Math.sqrt(Math.pow(coord_1[0][0]-coord_2[0][0],2)
-  +Math.pow(coord_1[1][1]-coord_2[1][1],2)+Math.pow(coord_1[2][2]-coord_2[2][2],2));
+  /*
+  if(coord_1[0][3]=0){
+    coord_1[0][3]=1;
+  };
+  if(coord_1[1][3]=0){
+    coord_1[1][3]=1;
+  };
+  if(coord_1[2][3]=0){
+    coord_1[2][3]=1;
+  };
+*/
+
+
+  var distances = Math.sqrt(Math.pow(coord_1[0][0]*coord_1[0][3]-coord_2[0][0]*coord_2[0][3],2)
+  +Math.pow(coord_1[1][1]*coord_1[1][3]-coord_2[1][1]*coord_2[1][3],2)
+  +Math.pow(coord_1[2][2]*coord_1[2][3]-coord_2[2][2]*coord_2[2][3],2));
   return distances;
 };
 
@@ -340,10 +354,11 @@ class Car_Control extends Scene
                                   // stores 30 random location matrices for drawing stars behind the solar system:
       this.lights_on = false;
       
-      this.car_model = Mat4.identity().times(Mat4.scale([0.3,0.3,0.3,1])); //Mat4.identity();
-      this.carP = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([100,-20,0]))).times(Mat4.scale([20, 20, 20]));
+      this.car_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
+      this.fakecarP = this.carP = this.car_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0]));
+      this.carP = this.car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,-1.5,0])));
                                      
-
+//
       //let carP = 
       
       this.star_matrices = [];
@@ -464,8 +479,8 @@ class Car_Control extends Scene
        
        let temp = model_transform;
        console.log(model_transform[0]);
-       temp[0] = Arrays_sum(model_transform[0],[10,0,0,0]);
-       temp[1] = Arrays_sum(model_transform[1],[0,10,0,0]);
+       temp[0] = Arrays_sum(model_transform[0],[1,0,0,0]);
+       temp[1] = Arrays_sum(model_transform[1],[0,1,0,0]);
        //temp[0][0]
        model_transform=Mat4.identity();
 
@@ -670,9 +685,26 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
       //let carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]));
       
       
+      
       //,this.materials.car_texture); 
-    
+      //ball
+      let flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
+      let flyball = flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,3,-1.5]));
+      //Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 ))
+      
 
+      if(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),flyball)<75)
+      {
+        
+        flyball=flyball.times(Mat4.translation([ 0,1,0 ]));
+      }
+
+      
+      //
+      this.shapes.ball_4.draw(context, program_state, flyball,this.materials.plastic_stars);
+      console.log(this.carP,flyball);
+    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),flyball));
+    //draw car
      if(i<=3){                               
         this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
         //i = i
