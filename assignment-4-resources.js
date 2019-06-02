@@ -813,7 +813,7 @@ class Movement_Controls extends Scene
       this.key_triggered_button( "Down",   [ "z" ], () => this.thrust[1] =  1, undefined, () => this.thrust[1] = 0 ); 
 
       const speed_controls = this.control_panel.appendChild( document.createElement( "span" ) );
-      speed_controls.style.margin = "60px";
+      speed_controls.style.margin = "30px";
       this.key_triggered_button( "-",  [ "o" ], () => 
                                             this.speed_multiplier  /=  1.2, "green", undefined, undefined, speed_controls );
       this.live_string( box => { box.textContent = "Speed: " + this.speed_multiplier.toFixed(2) }, speed_controls );
