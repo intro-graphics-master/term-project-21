@@ -301,7 +301,7 @@ class Solar_System extends Scene
               car_texture3: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_3.png" ),
                 ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
-                 ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } )
+                 ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
               sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
@@ -618,26 +618,26 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
      //car                               
 //this.shapes.teapot.draw( context, program_state, 
       
-      //////car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
+      let carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
       
       
       //,this.materials.car_texture); 
     
 
      if(i<=3){                               
-        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture); 
+        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture); 
         //i = i
      }
 
      if(7>=i&i>=4){                               
-        this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture2); 
+        this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture2); 
      
      }
      if(11>=i&i>=8){
-       this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture3); 
+       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture3); 
      }
      if(i>=12){
-       this.shapes.teapot.draw( context, program_state, car_model.times(Mat4.scale([15, 15, 15])).times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([6,-1.75,0]))),this.materials.car_texture4); 
+       this.shapes.teapot.draw( context, program_state, carP,this.materials.car_texture4); 
      }
     if(i>=16){
       i = i - 16;
