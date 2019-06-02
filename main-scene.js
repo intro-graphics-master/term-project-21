@@ -955,7 +955,7 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
                      );
     }else{ 
-    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc).times( Mat4.translation([ 0,0,1  ]));
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc).times( Mat4.translation([ 0,0,1  ])));
     }
  }
 
