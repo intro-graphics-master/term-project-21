@@ -248,6 +248,11 @@ class Solar_System extends Scene
               car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
                  ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
+door_texture: new Material(texture_shader_2, { texture: new Texture( "assets/ddd.png" ),
+                          ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
+
+             floor_texture: new Material(texture_shader_2, { texture: new Texture( "assets/fff.jpg" ),
+                          ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/night.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
 
@@ -256,7 +261,7 @@ class Solar_System extends Scene
                 pillow_texture: new Material(texture_shader_2, { texture: new Texture( "assets/stars.png" ),
                         ambient:1, diffusivity: 1, specularity: 0 } ),
                  text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
-                                                 texture: new Texture( "assets/TV.gif" ) }),
+                                                 texture: new Texture( "assets/TV.png" ) }),
                  monalisa : new Material(texture_shader_2, {texture: new Texture("assets/mona.jpg"),ambient: 1, color: Color.of( 0,0,0,1 )})   
 
                        };
@@ -294,8 +299,10 @@ class Solar_System extends Scene
                                  // TODO (#5b): Add a button control.  Provide a callback that flips the boolean value of "this.lights_on".
        // this.key_triggered_button() 
        this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
-        this.key_triggered_button( "first/third", [ "f" ],()=>  this.perspective= !this.perspective );
+
          this.key_triggered_button( "get into car", [ "c" ],()=>  this.carB= !this.carB );
+        this.key_triggered_button( "first/third", [ "t" ],()=>  this.perspective= !this.perspective );
+
 
       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
        undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
@@ -467,7 +474,7 @@ class Solar_System extends Scene
  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([999,999,999])), this.materials.sky_texture);
 //floor
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([ 0,0,-39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
-                               this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
+                               this.materials.floor_texture);
 //walls
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([0,59.9,0])).times( Mat4.scale([ 60,60,40 ]) )
                                        .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),
@@ -582,7 +589,7 @@ else if ( t >= 74)
   doorP = doorP.times(Mat4.translation([-10,0,0])).times(Mat4.translation([0,-10,0])).times(Mat4.rotation(Math.PI/2, [0,0,1]));
 }
 
-  this.shapes.box.draw(context, program_state, doorP.times(Mat4.scale([0.1,10,15])), this.materials.plastic.override(Color.of(1,0,0,1)));
+  this.shapes.box.draw(context, program_state, doorP.times(Mat4.scale([0.1,10,15])), this.materials.door_texture);
 
 
 //Tund
