@@ -557,6 +557,7 @@ this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-62)
  }
  else if (t >= 65 && t < 69)
  {
+   
    this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
