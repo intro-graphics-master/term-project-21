@@ -293,7 +293,7 @@ class Solar_System extends Scene
                                  // TODO (#5b): Add a button control.  Provide a callback that flips the boolean value of "this.lights_on".
        // this.key_triggered_button() 
        this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
-        this.key_triggered_button( "first/third", [ "f" ],()=>  this.perspective= !this.perspective );
+        this.key_triggered_button( "first/third", [ "t" ],()=>  this.perspective= !this.perspective );
 
 
       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
