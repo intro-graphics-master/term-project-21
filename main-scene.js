@@ -17,7 +17,9 @@ const { Square,Cube, Subdivision_Sphere, Transforms_Sandbox_Base,
 
 // (Can define Main_Scene's class here)
 var i = 1;
+/*
 
+*/
 //
 function scaleVector(vec,scale){
   var result = [vec[0]*scale,vec[1]*scale,vec[2]*scale];
@@ -208,7 +210,8 @@ class Car_Control extends Scene
                //[0,4,3.8], [.5,0,1], [.5,0,.8], [.4,0,.7], [.4,0,.5], [.5,0,.4], [.5,0,-1], [.4,0,-1.5], [.25,0,-1.8], [0,0,-1.7] 
       //const points = Vec.cast([],[],[],[],[],[]
           //             );
-
+       this.sounds = { fire: new Audio('assets/CaveStory_short.mp3' ) 
+                     }
                                                 // TODO (#1):  Complete this list with any additional shapes you need.
       this.shapes = { 'box' : new Cube(),
                    'ball_4' : new Subdivision_Sphere( 4 ),
@@ -276,7 +279,7 @@ class Car_Control extends Scene
       const black_hole_shader = new Black_Hole_Shader();
       const sun_shader        = new Sun_Shader();
       
-       
+      
 
                                               // *** Materials: *** wrap a dictionary of "options" for a shader.
         const phong2   = new defs.Phong_Shader();
@@ -369,13 +372,16 @@ class Car_Control extends Scene
       //let carP = 
       this.flyball_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
       this.flyball = this.flyball_model.times(Mat4.scale([5, 5, 5])).times(Mat4.translation([6,8,-1.5]));
-      //this.sounds = { fire: new Audio('assets/story.mp3' )};
+      
       this.star_matrices = [];
+      
       for( let i=0; i<30; i++ )
         this.star_matrices.push( Mat4.rotation( Math.PI/2 * (Math.random()-.5), Vec.of( 0,1,0 ) )
                          .times( Mat4.rotation( Math.PI/2 * (Math.random()-.5), Vec.of( 1,0,0 ) ) )
                          .times( Mat4.translation([ 0,0,-150 ]) ) );
     }
+    
+
   make_control_panel()
     {                                 // make_control_panel(): Sets up a panel of interactive HTML elements, including
                                       // buttons with key bindings for affecting this scene, and live info readouts.
@@ -403,13 +409,22 @@ class Car_Control extends Scene
         //carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-97,0]))).times(Mat4.scale([40, 40, 40]))
 
     }
+
   display( context, program_state )
     {                                                // display():  Called once per frame of animation.  For each shape that you want to
                                                      // appear onscreen, place a .draw() call for it inside.  Each time, pass in a
                                                      // different matrix value to control where the shape appears.
      
                            // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
-                           
+      /*
+      this.play_sound( name, volume = 1 )
+    { if( 0 < this.sounds[ name ].currentTime && this.sounds[ name ].currentTime < .3 ) return;
+      this.sounds[ name ].currentTime = 0;
+      this.sounds[ name ].volume = Math.min(Math.max(volume, 0), 1);;
+      this.sounds[ name ].play();
+    }  
+    */                         
+      //this.play_sound( "fire" );                   
       if( !context.scratchpad.controls ) 
         {                       // Add a movement controls panel to the page:
           this.children.push( context.scratchpad.controls = new defs.Movement_Controls() ); 
@@ -494,7 +509,7 @@ class Car_Control extends Scene
        const angle = Math.PI / 18;
        let x = Math.sin(8*t);
   
-       
+       /*testing code
        let temp = model_transform;
        console.log(model_transform[0]);
        temp[0] = Arrays_sum(model_transform[0],[1,0,0,0]);
@@ -506,7 +521,7 @@ class Car_Control extends Scene
        console.log(model_transform);
        model_transform=Mat4.identity();
        this.shapes.box.draw( context, program_state, temp.times(Mat4.scale([1,1,1])), this.materials.sky_texture);
-       
+       */
 
        
       
