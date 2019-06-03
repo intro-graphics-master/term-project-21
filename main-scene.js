@@ -428,12 +428,6 @@ class Solar_System extends Scene
        
 
 
-
-       
-
-
-
-
         model_transform = Mat4.identity();
         model_transform =model_transform .times(Mat4.scale([0.3,0.3,0.3,1]));
      //   this.shapes.box.draw(context, program_state, model_transform, this.solid.override(yellow) );
@@ -557,18 +551,18 @@ let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
 //                                        .times(Mat4.translation([0,-10 ,0 ]))
 //                                        .times( Mat4.scale([ 0.1,10,15 ]) );
-if(t<66 && t>=62){
+if(t<65 && t>=61){
 this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-62)/4*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
- else if (t >= 66 && t < 70)
+ else if (t >= 65 && t < 69)
  {
    this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
  }
-else if(t<=74 && t>=70){
+else if(t<73 && t>=69){
 this.shapes.box.draw( context, program_state, OPENDOOR
-                                       .times( Mat4.rotation((t-70)/4 * Math.PI/2, Vec.of( 0,0,1 ) ) )
+                                       .times( Mat4.rotation((t-69)/4 * Math.PI/2, Vec.of( 0,0,1 ) ) )
                                        .times(Mat4.translation([0,10 ,0 ]))
                                        .times( Mat4.scale([ 0.1,10,15 ]) ),
                                this.materials.plastic.override(Color.of(1,0,0,1)));
@@ -1032,6 +1026,7 @@ class Camera_Teleporter extends Scene
       this.key_triggered_button(              "Next", [ "h" ], this.increase );
       this.new_line();
       this.live_string( box => { box.textContent = "Selected camera location: " + this.selection } );
+      this.key_triggered_button( "Get into car",       [ "c" ], () => this.car = true);
     }  
   increase() { this.selection = Math.min( this.selection + 1, Math.max( this.cameras.length-1, 0 ) ); }
   decrease() { this.selection = Math.max( this.selection - 1, 0 ); }   // Don't allow selection of negative indices.
