@@ -930,7 +930,7 @@ if (t >= 71 && this.carB)
 rightarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.rotation(Math.PI/4,[-1,0,0]));
 }
 
-
+if(!this.perspective ){ 
   this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.scale([1.3,1.3,1.5])).times(Mat4.translation([0,0,-0.1])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));
   this.shapes.donut.draw(context, program_state, model_transform.times(Mat4.scale([1.3,1.3,1.5])).times(Mat4.translation([0,0,0.2])), this.materials.sun.override(Color.of(0.5, 0.5, 0.8, 1)));     
 
@@ -953,7 +953,7 @@ rightarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.
      this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
      this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([-0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
 
-
+}
       
   let eyeloc= model_transform.times(Mat4.translation([0,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1]));
 
@@ -986,7 +986,7 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
    if(t>=70 && t< 80  ){ 
 
   this.camera_teleporter.cameras.push( 
-          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,250  ]) ))
                      );
   }
 
@@ -995,10 +995,9 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
  if(t>80){
    if(!this.perspective ){ 
        this.camera_teleporter.cameras.push( 
-          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
-                     );
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,250  ]) )));
     }else{ 
-    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc.times( Mat4.translation([ 0,0,1  ]))));
     }
  }
 
@@ -1008,9 +1007,9 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 for (let i = 0; i < 9; i++)
 {
       
-      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.5])).times(Mat4.translation([0, 0, 2.5])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
+      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.5])).times(Mat4.translation([0, 0, 2.7])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
       
-    if (t < 70)
+    if (t < 80)
     {
       this.shapes.cakelayer.draw(context,program_state,
                                         can1.times( Mat4.scale([0.1, 0.1, 3-t/50]) ),//
