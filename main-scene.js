@@ -539,42 +539,31 @@ if(this.lights_on){
                                this.materials.metal);  
 }
 
-//  const t1 = program_state.animation_time/1000;
-//  while(t1<100){
+
 
 //door 
 
-  let doorP=model_transform.times(Mat4.translation([60,-30,-25]));
-//const t1 = program_state.animation_time/1000;
+  let doorP=model_transform.times(Mat4.translation([60,-30,-25]));//.times(Mat4.scale([0.1,10,15]));
 
-let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
-//                                        .times(Mat4.translation([0,-10 ,0 ]))
-//                                        .times( Mat4.scale([ 0.1,10,15 ]) );
-if(t<65 && t>=61){
-this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-62)/4*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+if(t<64 && t>=61){//61-64
+    doorP = doorP.times(Mat4.translation([(t-61)/3*10,0,0])).times(Mat4.translation([0,-(t-61)/3*10,0])).times(Mat4.rotation(Math.PI/6*(t-61), [0,0,-1]));
  }
- else if (t >= 65 && t < 69)
+
+else if (t >= 64)
  {
-   
-   this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+    doorP = doorP.times(Mat4.translation([0,-10,0])).times(Mat4.translation([10,0,0])).times(Mat4.rotation(Math.PI/2, [0,0,-1]));//.times(Mat4.translation([0,-10,0]));
  }
-else if(t<73 && t>=69){
-this.shapes.box.draw( context, program_state, OPENDOOR
-                                       .times( Mat4.rotation((t-69)/4 * Math.PI/2, Vec.of( 0,0,1 ) ) )
-                                       .times(Mat4.translation([0,10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),
-                               this.materials.plastic.override(Color.of(1,0,0,1)));
- }
-else{this.shapes.box.draw( context, program_state, doorP.times( Mat4.rotation( Math.PI, Vec.of( 0,1,0 ) ) ).times( Mat4.scale([ 0.1,10,15 ]) ),
-                               this.materials.plastic.override(Color.of(1,0,0,1)));}
 
-//const t1 = program_state.animation_time/1000;
-  //    const funny_orbit = Mat4.rotation(  Math.PI/4*t1, Vec.of( Math.cos(t1), Math.sin(t1), .7*Math.cos(t1) ) );
-     // this.shapes.box.draw( context, program_state,  model_transform, this.grey );
-      
+if(t<74 && t>=70){
+    doorP = doorP.times(Mat4.translation([-(t-70)/4*10,0,0])).times(Mat4.translation([0,-(t-70)/4*10,0])).times(Mat4.rotation(Math.PI/8*(t-70), [0,0,1]));
+ }
+else if ( t >= 74)
+{
+  doorP = doorP.times(Mat4.translation([-10,0,0])).times(Mat4.translation([0,-10,0])).times(Mat4.rotation(Math.PI/2, [0,0,1]));
+}
+
+  this.shapes.box.draw(context, program_state, doorP.times(Mat4.scale([0.1,10,15])), this.materials.plastic.override(Color.of(1,0,0,1)));
+
 
 // program_state.lights = [ new Light( Vec.of( 3,2,1,0 ),   Color.of( 1,1,1,1 ),  1000000 ),
 //                                new Light( Vec.of( 3,10,10,1 ), Color.of( 1,.7,.7,1 ), 100000 ) ];
@@ -623,19 +612,16 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
                                             .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.pillow_texture);  
 
-
  
-
-    
 
      let car_model =model_transform .times(Mat4.scale([0.4,0.4,0.4,1])); //Mat4.identity();
      //car                               
-//this.shapes.teapot.draw( context, program_state, 
+ 
       
       let carP = car_model.times(Mat4.rotation(Math.PI/2, Vec.of( 1,0,0 )).times(Mat4.translation([300,-63.5,0]))).times(Mat4.scale([40, 40, 40]))
       
       
-      //,this.materials.car_texture); 
+      
     
 
      if(i<=3){                               
@@ -924,7 +910,7 @@ rightarm_model = model_transform;
 }
 
 //in the car
-if (t >= 75)
+if (t >= 75 && this.enabled)
 {
   model_transform = model_transform.times(Mat4.translation([-4.35,1.1,0])).times(Mat4.scale([0.4,0.5,0.5]));
    leftleg_model = model_transform;
@@ -1020,21 +1006,21 @@ class Camera_Teleporter extends Scene
     {                                // make_control_panel(): Sets up a panel of interactive HTML elements, including
                                      // buttons with key bindings for affecting this scene, and live info readouts.
       
-      this.key_triggered_button(  "Enable",       [ "e" ], () => this.enabled = true  );
+      this.key_triggered_button(  "get into car",       [ "c" ], () => this.enabled = true  );
       this.key_triggered_button( "Disable", [ "Shift", "E" ], () => this.enabled = false );
       this.new_line();
       this.key_triggered_button( "Previous location", [ "g" ], this.decrease );
       this.key_triggered_button(              "Next", [ "h" ], this.increase );
       this.new_line();
       this.live_string( box => { box.textContent = "Selected camera location: " + this.selection } );
-      this.key_triggered_button( "Get into car",       [ "c" ], () => this.car = true);
+      //this.key_triggered_button( "Get into car",       [ "c" ], () => this.car = true);
     }  
   increase() { this.selection = Math.min( this.selection + 1, Math.max( this.cameras.length-1, 0 ) ); }
   decrease() { this.selection = Math.max( this.selection - 1, 0 ); }   // Don't allow selection of negative indices.
   display( context, program_state )
   {
     const desired_camera = this.cameras[ this.selection ];
-    if( !desired_camera || !this.enabled )
+    if( !desired_camera )
       return;
     const dt = program_state.animation_delta_time;
     program_state.set_camera( desired_camera.map( (x,i) => Vec.from( program_state.camera_inverse[i] ).mix( x, .01*dt ) ) );    
