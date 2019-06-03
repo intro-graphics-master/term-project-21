@@ -256,7 +256,7 @@ class Solar_System extends Scene
                 pillow_texture: new Material(texture_shader_2, { texture: new Texture( "assets/stars.png" ),
                         ambient:1, diffusivity: 1, specularity: 0 } ),
                  text_image : new Material( texture_shader_2, { ambient: 1, diffusivity: 0, specularity: 0,
-                                                 texture: new Texture( "assets/TV.gif" ) }),
+                                                 texture: new Texture( "assets/TV.png" ) }),
                  monalisa : new Material(texture_shader_2, {texture: new Texture("assets/mona.jpg"),ambient: 1, color: Color.of( 0,0,0,1 )})   
 
                        };
@@ -984,15 +984,15 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 
 
 
-//  if(t>80){
-//    if(!this.perspective ){ 
-//        this.camera_teleporter.cameras.push( 
-//           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
-//                      );
-//     }else{ 
-//     this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
-//     }
-//  }
+ if(t>80){
+   if(!this.perspective ){ 
+       this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+                     );
+    }else{ 
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
+    }
+ }
 
 
 
