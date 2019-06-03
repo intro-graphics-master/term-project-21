@@ -912,7 +912,7 @@ rightarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.
 
 
 
-eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/2,[1,0,0])).times( Mat4.translation([ 0,0,-1  ]));//.times(Mat4.rotation(Math.PI/2,Vec.of([0,0,1])));
+eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/2,[1,0,0])).times( Mat4.translation([ 0,0,-2  ]));//.times(Mat4.rotation(Math.PI/2,Vec.of([0,0,1])));
   //Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0, 0,20 ) ) );}
   if(t>=14 && t < 33 ){   //}&& t<78){
 
@@ -955,7 +955,7 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
                      );
     }else{ 
-    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc).times( Mat4.translation([ 0,0,1  ])));
     }
  }
 
