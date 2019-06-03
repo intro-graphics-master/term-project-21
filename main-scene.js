@@ -143,7 +143,7 @@ export class Shape_From_File extends Shape
 
 
 const Main_Scene =
-class Solar_System extends Scene
+class Cake_Man extends Scene
 {                                             // **Solar_System**:  Your Assingment's Scene.
   constructor()
     {                  // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
@@ -298,11 +298,11 @@ door_texture: new Material(texture_shader_2, { texture: new Texture( "assets/ddd
 
                                  // TODO (#5b): Add a button control.  Provide a callback that flips the boolean value of "this.lights_on".
        // this.key_triggered_button() 
-       this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
+       //this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
 
          this.key_triggered_button( "get into car", [ "c" ],()=>  this.carB= !this.carB );
         this.key_triggered_button( "first/third", [ "t" ],()=>  this.perspective= !this.perspective );
-
+  this.new_line();
 
       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
        undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
