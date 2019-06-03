@@ -460,12 +460,6 @@ class Solar_System extends Scene
        
 
 
-
-       
-
-
-
-
         model_transform = Mat4.identity();
         model_transform =model_transform .times(Mat4.scale([0.3,0.3,0.3,1]));
 //sky 
@@ -565,35 +559,31 @@ if(this.lights_on){
 }
 
 
+
 //door 
 
-  let doorP=model_transform.times(Mat4.translation([60,-30,-25]));
-//const t1 = program_state.animation_time/1000;
+  let doorP=model_transform.times(Mat4.translation([60,-30,-25]));//.times(Mat4.scale([0.1,10,15]));
 
-let OPENDOOR = doorP.times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) );
-//                                        .times(Mat4.translation([0,-10 ,0 ]))
-//                                        .times( Mat4.scale([ 0.1,10,15 ]) );
-if(t<66 && t>=62){
-this.shapes.box.draw( context, program_state,OPENDOOR.times(Mat4.rotation((t-62)/4*(Math.PI/2),[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+if(t<64 && t>=61){//61-64
+    doorP = doorP.times(Mat4.translation([(t-61)/3*10,0,0])).times(Mat4.translation([0,-(t-61)/3*10,0])).times(Mat4.rotation(Math.PI/6*(t-61), [0,0,-1]));
  }
- else if (t >= 66 && t < 70)
+
+else if (t >= 64)
  {
-   this.shapes.box.draw( context, program_state, OPENDOOR.times(Mat4.rotation(Math.PI/2,[0,0,-1])).times(Mat4.translation([0,-10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),this.materials.plastic.override(Color.of(1,0,0,1)));
+    doorP = doorP.times(Mat4.translation([0,-10,0])).times(Mat4.translation([10,0,0])).times(Mat4.rotation(Math.PI/2, [0,0,-1]));//.times(Mat4.translation([0,-10,0]));
  }
-else if(t<=74 && t>=70){
-this.shapes.box.draw( context, program_state, OPENDOOR
-                                       .times( Mat4.rotation((t-70)/4 * Math.PI/2, Vec.of( 0,0,1 ) ) )
-                                       .times(Mat4.translation([0,10 ,0 ]))
-                                       .times( Mat4.scale([ 0.1,10,15 ]) ),
-                               this.materials.plastic.override(Color.of(1,0,0,1)));
- }
-else{this.shapes.box.draw( context, program_state, doorP.times( Mat4.rotation( Math.PI, Vec.of( 0,1,0 ) ) ).times( Mat4.scale([ 0.1,10,15 ]) ),
-                               this.materials.plastic.override(Color.of(1,0,0,1)));}
 
-       
+if(t<74 && t>=70){
+    doorP = doorP.times(Mat4.translation([-(t-70)/4*10,0,0])).times(Mat4.translation([0,-(t-70)/4*10,0])).times(Mat4.rotation(Math.PI/8*(t-70), [0,0,1]));
+ }
+else if ( t >= 74)
+{
+  doorP = doorP.times(Mat4.translation([-10,0,0])).times(Mat4.translation([0,-10,0])).times(Mat4.rotation(Math.PI/2, [0,0,1]));
+}
+
+  this.shapes.box.draw(context, program_state, doorP.times(Mat4.scale([0.1,10,15])), this.materials.plastic.override(Color.of(1,0,0,1)));
+
+
 //Tund
 this.shapes.Tund.draw( context, program_state, model_transform.times( Mat4.translation([ -10,-46,-35  ])).times( Mat4.scale([ 20,10,10]) )
           .times( Mat4.rotation( Math.PI, Vec.of( 0,0,1 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ),  
@@ -606,6 +596,7 @@ this.shapes.bed.draw( context, program_state,  model_transform.times(Mat4.transl
 this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.translation([ -53,40,-22  ])).times( Mat4.scale([ 5,5,5 ]) )
                                             .times( Mat4.rotation( Math.PI/2, Vec.of( 1,0,0 ) ) ).times( Mat4.rotation( Math.PI/2, Vec.of( 0,1,0 ) ) ),
                                this.materials.pillow_texture);  
+
 
 
       while(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball)<75)
@@ -623,11 +614,13 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
       this.shapes.ball_4.draw(context, program_state, this.flyball,this.materials.plastic_stars);
 //       console.log(this.carP,this.flyball);
       
+
 //     console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
 //     //console.log(twoCoords_vector());
 //     console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
 //     console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
     //draw car
+
      if(i<=3){                               
         this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
         //i = i
@@ -920,7 +913,7 @@ rightarm_model = model_transform;
 }
 
 //in the car
-if (t >= 75)
+if (t >= 75 && this.enabled)
 {
   model_transform = model_transform.times(Mat4.translation([-4.35,1.1,0])).times(Mat4.scale([0.4,0.5,0.5]));
    leftleg_model = model_transform;
@@ -1054,20 +1047,23 @@ class Camera_Teleporter extends Scene
     {                                // make_control_panel(): Sets up a panel of interactive HTML elements, including
                                      // buttons with key bindings for affecting this scene, and live info readouts.
       
-      this.key_triggered_button(  "Enable",       [ "e" ], () => this.enabled = true  );
+      this.key_triggered_button(  "get into car",       [ "c" ], () => this.enabled = true  );
       this.key_triggered_button( "Disable", [ "Shift", "E" ], () => this.enabled = false );
       this.new_line();
       this.key_triggered_button( "Previous location", [ "g" ], this.decrease );
       this.key_triggered_button(              "Next", [ "h" ], this.increase );
       this.new_line();
       this.live_string( box => { box.textContent = "Selected camera location: " + this.selection } );
+      //this.key_triggered_button( "Get into car",       [ "c" ], () => this.car = true);
     }  
   increase() { this.selection = Math.min( this.selection + 1, Math.max( this.cameras.length-1, 0 ) ); }
   decrease() { this.selection = Math.max( this.selection - 1, 0 ); }   // Don't allow selection of negative indices.
   display( context, program_state )
   {
     const desired_camera = this.cameras[ this.selection ];
-    if( !desired_camera )//|| !this.enabled )
+
+    if( !desired_camera )
+
       return;
     const dt = program_state.animation_delta_time;
     program_state.set_camera( desired_camera.map( (x,i) => Vec.from( program_state.camera_inverse[i] ).mix( x, .01*dt ) ) );    
