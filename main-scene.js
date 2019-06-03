@@ -896,51 +896,37 @@ rightarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.
      this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
      this.shapes.ball_4.draw(context, program_state, model_transform.times(Mat4.translation([-0.2,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1])), this.materials.eyes); 
 
-                            // new value based on our light switch.                         
-      //const modifier = this.lights_on ? { ambient: 1 } : { ambient: 1 };
+
       
   let eyeloc= model_transform.times(Mat4.translation([0,-0.7,1.1])).times(Mat4.scale([0.1, 0.1, 0.1]));
 
-//   if(t>=14 && t<78 ){
-//     program_state.set_camera(Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,20,0 ), Vec.of( 0, 0,20 ) ) );
-//     this.initial_camera_location = program_state.camera_inverse;
-//           program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 200 );
-//     this.camera_teleporter.cameras.push( 
-//           Mat4.inverse(eyeloc.times( Mat4.translation([ 0,0,2 ])).times(Mat4.rotation(Math.PI,Vec.of([0,0,1])))
-//           )                 
-//    )};
-
-
-
-eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/2,[1,0,0])).times( Mat4.translation([ 0,0,-2  ]));//.times(Mat4.rotation(Math.PI/2,Vec.of([0,0,1])));
-  //Mat4.look_at( Vec.of( 20,0,0 ), Vec.of( 0,0,0 ), Vec.of( 0, 0,20 ) ) );}
-  if(t>=14 && t < 33 ){   //}&& t<78){
+eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/2,[1,0,0])).times( Mat4.translation([ 0,0,-2  ]));
+  if(t>=14 && t < 30 ){   
 
   this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc )
                      );
   }
-  if(t>=33 && t<  60 ){   //}&& t<78){
-
+  if(t>=30 && t<  55 ){   
   this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/6,[-1,0,0])).times( Mat4.translation([ 0,7,30  ]) ))
                      );
   }
-  if(t>=60 && t< 65  ){   //}&& t<78){
+  if(t>=55 && t< 65  ){   
 
   this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc)
                      );
   }
   
- if(t>=65 && t< 70  ){   //}&& t<78){
+ if(t>=65 && t< 70  ){   
 
   this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/10,[1,0,0])))
                      );
   }
 
-   if(t>=70 && t< 89  ){   //}&& t<78){
+   if(t>=70 && t< 80  ){ 
 
   this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
@@ -949,20 +935,17 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 
 
 
- if(t>90){
+ if(t>80){
    if(!this.perspective ){ 
        this.camera_teleporter.cameras.push( 
           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
                      );
     }else{ 
-    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc).times( Mat4.translation([ 0,0,1  ])));
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
     }
  }
 
-//this.camera_teleporter.cameras.push( Mat4.inverse( model_transform.times( Mat4.translation([ 0,0,5 ])))); 
 
-//candlefire      
-      //model_transform = Mat4.identity();
 
 
 for (let i = 0; i < 9; i++)
@@ -990,10 +973,6 @@ for (let i = 0; i < 9; i++)
 
 
 
-
- //program_state.set_camera(Mat4.translation([0,0,10]));
-                  
-      // this.camera_teleporter.cameras.push( Mat4.inverse( 
 
     }
 }
