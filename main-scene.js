@@ -269,6 +269,7 @@ class Solar_System extends Scene
                                   // stores 30 random location matrices for drawing stars behind the solar system:
       this.lights_on = false;
       this.perspective= false;
+      this.carB = false;
 
 
        this.car_model = Mat4.identity().times(Mat4.scale([1,1,1,1])); //Mat4.identity();
@@ -294,7 +295,7 @@ class Solar_System extends Scene
        // this.key_triggered_button() 
        this.key_triggered_button( "lights on/off", [ "l" ],()=> this.lights_on = !this.lights_on );
         this.key_triggered_button( "first/third", [ "f" ],()=>  this.perspective= !this.perspective );
-
+         this.key_triggered_button( "get into car", [ "c" ],()=>  this.carB= !this.carB );
 
       this.key_triggered_button( "car_forward",     [ "i" ], () => this.carP = this.carP.times(Mat4.translation([0,0,-0.1])), 
        undefined, () => this.carP = this.carP.times(Mat4.translation([0,0,0]))) ;
@@ -857,7 +858,7 @@ rightarm_model = model_transform;
 
 
 //walking
-if (t >= 55 && t < 68)
+if (t >= 55 && t < 66)
 {
     model_transform = model_transform.times(Mat4.translation([0,-(t - 55)*2,0]));
     leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
@@ -865,9 +866,9 @@ if (t >= 55 && t < 68)
 leftarm_model = model_transform;
 rightarm_model = model_transform;
 }
-else if(t >= 68)
+else if(t >= 66)
 {
-  model_transform = model_transform.times(Mat4.translation([0, -26, 0]));
+  model_transform = model_transform.times(Mat4.translation([0, -22, 0]));
   leftleg_model = model_transform;
   rightleg_model = model_transform;
 leftarm_model = model_transform;
@@ -876,15 +877,15 @@ rightarm_model = model_transform;
 
 
 //turning
-if (t >= 68 && t < 70)
+if (t >= 66 && t < 68)
 {
-    model_transform = model_transform.times(Mat4.rotation(Math.PI/4*(t-68),[0,0,1]));
+    model_transform = model_transform.times(Mat4.rotation(Math.PI/4*(t-66),[0,0,1]));
     leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
     rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));
   leftarm_model = model_transform;
 rightarm_model = model_transform;
 }
-else if (t >= 70)
+else if (t >= 68)
 {
     model_transform = model_transform.times(Mat4.rotation(Math.PI/2,[0,0,1]));
     leftleg_model = model_transform;
@@ -894,18 +895,18 @@ rightarm_model = model_transform;
 }
 
 //walking
-if (t >= 70 && t < 74)
+if (t >= 68 && t < 70)
 {
-model_transform = model_transform.times(Mat4.translation([0,-(t-70)*2,0]));
+model_transform = model_transform.times(Mat4.translation([0,-(t-68)*2,0]));
     leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
     rightleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( 1,0,0 )));
   
   leftarm_model = model_transform;
 rightarm_model = model_transform; 
 }
-else if (t >= 74)
+else if (t >= 70)
 {
-    model_transform = model_transform.times(Mat4.translation([0,-8,0]));
+    model_transform = model_transform.times(Mat4.translation([0,-6,0]));
     leftleg_model = model_transform;
   rightleg_model = model_transform;
   leftarm_model = model_transform;
@@ -913,9 +914,9 @@ rightarm_model = model_transform;
 }
 
 //in the car
-if (t >= 75 && this.enabled)
+if (t >= 70 && this.carB)
 {
-  model_transform = model_transform.times(Mat4.translation([-4.35,1.1,0])).times(Mat4.scale([0.4,0.5,0.5]));
+  model_transform = this.carP.times(Mat4.rotation(Math.PI/2,[-1,0,0])).times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.scale([0.13,0.18,0.2])).times(Mat4.translation([2,-1.4,0]));
    leftleg_model = model_transform;
   rightleg_model = model_transform;
   leftarm_model = model_transform.times(Mat4.translation([0,-0.5,0])).times(Mat4.rotation(Math.PI/4,[-1,0,0]));
@@ -996,18 +997,18 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 
 
 
-
+//candles
 for (let i = 0; i < 9; i++)
 {
       
-      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.4])).times(Mat4.translation([0, 0, 3])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
+      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.5])).times(Mat4.translation([0, 0, 4])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
       
     if (t < 30)
     {
       this.shapes.cakelayer.draw(context,program_state,
-                                        can1.times( Mat4.scale([0.1, 0.1, 3-t/10 ]) ),
+                                        can1.times( Mat4.scale([0.1, 0.1, 3-t/100]) ),//
                                        this.materials.plastic.override(Color.of(i/10 + 0.2, i/10, i/10, 1))); 
-      let can1f = can1.times( Mat4.translation([0,0,1.5-t/20]));
+      let can1f = can1.times( Mat4.translation([0,0,1.5-t/100]));
       this.shapes.ball_4.draw(context,program_state,
                                        can1f.times( Mat4.scale([0.2, 0.2, 0.2 ]) ),
                                       this.materials.fire); 
@@ -1042,16 +1043,17 @@ class Camera_Teleporter extends Scene
     { super();
       this.cameras = [];
       this.selection = 0;
+      //this.enabled = false;
     }
   make_control_panel()
     {                                // make_control_panel(): Sets up a panel of interactive HTML elements, including
                                      // buttons with key bindings for affecting this scene, and live info readouts.
       
-      this.key_triggered_button(  "get into car",       [ "c" ], () => this.enabled = true  );
-      this.key_triggered_button( "Disable", [ "Shift", "E" ], () => this.enabled = false );
-      this.new_line();
-      this.key_triggered_button( "Previous location", [ "g" ], this.decrease );
-      this.key_triggered_button(              "Next", [ "h" ], this.increase );
+      //this.key_triggered_button(  "get into car",       [ "c" ], () => this.enabled = !this.enabled  );
+//       this.key_triggered_button( "Disable", [ "Shift", "E" ], () => this.enabled = false );
+//       this.new_line();
+//       this.key_triggered_button( "Previous location", [ "g" ], this.decrease );
+//       this.key_triggered_button(              "Next", [ "h" ], this.increase );
       this.new_line();
       this.live_string( box => { box.textContent = "Selected camera location: " + this.selection } );
       //this.key_triggered_button( "Get into car",       [ "c" ], () => this.car = true);
