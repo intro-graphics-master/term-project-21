@@ -237,7 +237,7 @@ class Solar_System extends Scene
                       cake2: new Material(phong_shader, { ambient: 0.5, diffusivity: 1, specularity: 0, color: Color.of( 0.6,0.6,1,1 ) }),
                       eyes: new Material(phong_shader, { ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0.2,1 ) }),
                       fire: new Material( sun_shader, { ambient: 1, color: Color.of( 1,0,0,1 ) } ),
-                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/grass.jpg" ),
+                      grass: new Material(texture_shader_2, { texture: new Texture( "assets/ground_2.jpg" ),
                             ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
               car_texture: new Material(texture_shader_2, { texture: new Texture( "assets/Tex_0020_1.png" ),
                   ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
@@ -248,8 +248,9 @@ class Solar_System extends Scene
               car_texture4: new Material(texture_shader_2, { texture: new Texture( "assets/wheel_4.png" ),
                  ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ),
 
-              sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/sky.jpg" ),
+             sky_texture: new Material(texture_shader_2, { texture: new Texture( "assets/night.jpg" ),
                           ambient: 1, diffusivity: 1, specularity: 0, color: Color.of( 0,0,0,1 ) } ) ,
+
                bed_texture: new Material(texture_shader_2, { texture: new Texture( "assets/wooden.jpg" ),
                         ambient: 0.5, diffusivity: 1, specularity: 0 } ),
                 pillow_texture: new Material(texture_shader_2, { texture: new Texture( "assets/stars.png" ),
@@ -332,10 +333,13 @@ class Solar_System extends Scene
                     // orthographic() automatically generate valid matrices for one.  The input arguments of
                     // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.          
 
+          
+        
           program_state.set_camera( Mat4.look_at( Vec.of( -13,10,10 ), Vec.of( -13,10,5 ), Vec.of( -13, 1,1 ) ) );
-
           this.initial_camera_location = program_state.camera_inverse;
-          program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 1000 );
+          
+          program_state.projection_transform = Mat4.perspective( Math.PI/4, context.width/context.height, 1, 10000 );
+
         }
 
                                                                       // Find how much time has passed in seconds; we can use
@@ -344,7 +348,7 @@ class Solar_System extends Scene
 
                                                   // Have to reset this for each frame:
       this.camera_teleporter.cameras = [];
-
+////shaking camera 
       if(t>=9 && t<9.1){
       this.camera_teleporter.cameras.push( Mat4.look_at(  Vec.of( -13,10-t/5,10 ), Vec.of( -13,10-t/5,5 ), Vec.of( -13, 1,1 ) )  );
       }
@@ -464,8 +468,8 @@ class Solar_System extends Scene
 
         model_transform = Mat4.identity();
         model_transform =model_transform .times(Mat4.scale([0.3,0.3,0.3,1]));
-
-  this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([200,200,200])), this.materials.sky_texture);
+//sky 
+ this.shapes.box.draw( context, program_state, model_transform.times(Mat4.scale([999,999,999])), this.materials.sky_texture);
 //floor
 this.shapes.square.draw( context, program_state, model_transform.times(Mat4.translation([ 0,0,-39.9  ])).times( Mat4.scale([ 60,60,40 ]) ),
                                this.materials.plastic.override(Color.of(0.6,0.6,0.6,1)));
@@ -537,7 +541,7 @@ this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.tra
 //grass
 
 this.shapes.square.draw( context, program_state,  model_transform.times(Mat4.translation([ 0,0,-40  ]))
-                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 200,200,1 ]) ),
+                                       .times( Mat4.rotation( Math.PI, Vec.of( 1,0,0 ) ) ).times( Mat4.scale([ 1000,1000,1 ]) ),
                                this.materials.grass);
 
 //computer, key_board,mouse
@@ -617,12 +621,12 @@ this.shapes.Pillow.draw( context, program_state,  model_transform.times(Mat4.tra
       
       //
       this.shapes.ball_4.draw(context, program_state, this.flyball,this.materials.plastic_stars);
-      console.log(this.carP,this.flyball);
+//       console.log(this.carP,this.flyball);
       
-    console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
-    //console.log(twoCoords_vector());
-    console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
-    console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
+//     console.log(distance2Coords(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
+//     //console.log(twoCoords_vector());
+//     console.log(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball);
+//     console.log(twoCoords_vector(this.carP.times(Mat4.rotation(-Math.PI/2, Vec.of( 1,0,0 ))),this.flyball));
     //draw car
      if(i<=3){                               
         this.shapes.teapot.draw( context, program_state, this.carP,this.materials.car_texture); 
@@ -987,15 +991,15 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 
 
 
- if(t>80){
-   if(!this.perspective ){ 
-       this.camera_teleporter.cameras.push( 
-          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
-                     );
-    }else{ 
-    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
-    }
- }
+//  if(t>80){
+//    if(!this.perspective ){ 
+//        this.camera_teleporter.cameras.push( 
+//           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+//                      );
+//     }else{ 
+//     this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
+//     }
+//  }
 
 
 
