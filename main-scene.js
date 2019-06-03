@@ -895,7 +895,7 @@ rightarm_model = model_transform;
 }
 
 //walking
-if (t >= 68 && t < 70)
+if (t >= 68 && t < 71)
 {
 model_transform = model_transform.times(Mat4.translation([0,-(t-68)*2,0]));
     leftleg_model = model_transform.times(Mat4.rotation(1*angle*x, Vec.of( -1,0,0 )));
@@ -904,7 +904,7 @@ model_transform = model_transform.times(Mat4.translation([0,-(t-68)*2,0]));
   leftarm_model = model_transform;
 rightarm_model = model_transform; 
 }
-else if (t >= 70)
+else if (t >= 71)
 {
     model_transform = model_transform.times(Mat4.translation([0,-6,0]));
     leftleg_model = model_transform;
@@ -914,7 +914,7 @@ rightarm_model = model_transform;
 }
 
 //in the car
-if (t >= 70 && this.carB)
+if (t >= 71 && this.carB)
 {
   model_transform = this.carP.times(Mat4.rotation(Math.PI/2,[-1,0,0])).times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.scale([0.13,0.18,0.2])).times(Mat4.translation([2,-1.4,0]));
    leftleg_model = model_transform;
@@ -985,15 +985,15 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 
 
 
-//  if(t>80){
-//    if(!this.perspective ){ 
-//        this.camera_teleporter.cameras.push( 
-//           Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
-//                      );
-//     }else{ 
-//     this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
-//     }
-//  }
+ if(t>80){
+   if(!this.perspective ){ 
+       this.camera_teleporter.cameras.push( 
+          Mat4.inverse(eyeloc.times(Mat4.rotation(Math.PI/5,[-1,0,0])).times( Mat4.translation([ 0,20,150  ]) ))
+                     );
+    }else{ 
+    this.camera_teleporter.cameras.push(Mat4.inverse(eyeloc));
+    }
+ }
 
 
 
@@ -1001,12 +1001,12 @@ eyeloc=eyeloc.times(Mat4.rotation(Math.PI,[0,0,1])).times(Mat4.rotation(Math.PI/
 for (let i = 0; i < 9; i++)
 {
       
-      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.5])).times(Mat4.translation([0, 0, 4])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
+      let can1=model_transform.times(Mat4.scale([0.3,0.3,0.5])).times(Mat4.translation([0, 0, 2.5])).times(Mat4.rotation(30*i,Vec.of(0,0,1))).times( Mat4.translation([-1.5,0,0]));
       
-    if (t < 30)
+    if (t < 70)
     {
       this.shapes.cakelayer.draw(context,program_state,
-                                        can1.times( Mat4.scale([0.1, 0.1, 3-t/100]) ),//
+                                        can1.times( Mat4.scale([0.1, 0.1, 3-t/50]) ),//
                                        this.materials.plastic.override(Color.of(i/10 + 0.2, i/10, i/10, 1))); 
       let can1f = can1.times( Mat4.translation([0,0,1.5-t/100]));
       this.shapes.ball_4.draw(context,program_state,
